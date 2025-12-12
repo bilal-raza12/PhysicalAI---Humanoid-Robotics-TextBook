@@ -1,0 +1,256 @@
+# Book Structure Contract
+# Physical AI & Humanoid Robotics Textbook
+# Version: 1.0.0
+
+book:
+  title: "Physical AI & Humanoid Robotics"
+  subtitle: "A Simulation-First Approach"
+  target_pages: 300-400
+  citation_style: IEEE
+  format: Markdown (Docusaurus)
+
+front_matter:
+  - id: preface
+    title: "Preface"
+    required: true
+  - id: audience
+    title: "Who This Book Is For"
+    required: true
+  - id: prerequisites
+    title: "Prerequisites Checklist"
+    required: true
+  - id: how-to-use
+    title: "How to Use This Book"
+    required: true
+  - id: conventions
+    title: "Conventions Used"
+    required: true
+
+modules:
+  - id: module-1-ros2
+    number: 1
+    title: "The Robotic Nervous System (ROS 2)"
+    estimated_hours: 20
+    chapters:
+      - id: ch01-intro-ros2
+        number: 1
+        title: "Introduction to ROS 2 for Humanoids"
+        learning_objectives:
+          - "Understand ROS 2 architecture and design principles"
+          - "Set up a ROS 2 Humble development environment"
+          - "Create and run your first ROS 2 package"
+        exercises_min: 3
+
+      - id: ch02-nodes-topics
+        number: 2
+        title: "Nodes, Topics, Services & Launch Systems"
+        learning_objectives:
+          - "Create publisher and subscriber nodes"
+          - "Implement service servers and clients"
+          - "Build launch files for multi-node systems"
+        exercises_min: 4
+
+      - id: ch03-urdf-kinematics
+        number: 3
+        title: "URDF & Modeling Humanoid Kinematics"
+        learning_objectives:
+          - "Define robot geometry using URDF"
+          - "Model joint types and kinematic chains"
+          - "Visualize humanoid models in RViz2"
+        exercises_min: 3
+
+      - id: ch04-python-agents
+        number: 4
+        title: "Integrating Python AI Agents with rclpy"
+        learning_objectives:
+          - "Build AI agents using rclpy"
+          - "Implement behavior trees for decision making"
+          - "Connect external AI services to ROS 2"
+        exercises_min: 3
+
+  - id: module-2-digital-twin
+    number: 2
+    title: "The Digital Twin (Gazebo & Unity)"
+    estimated_hours: 24
+    prerequisites:
+      - module-1-ros2
+    chapters:
+      - id: ch05-physics-sim
+        number: 1
+        title: "Introduction to Physics Simulation"
+        learning_objectives:
+          - "Understand physics engine fundamentals"
+          - "Configure simulation parameters"
+          - "Implement collision detection and response"
+        exercises_min: 3
+
+      - id: ch06-gazebo-twin
+        number: 2
+        title: "Building a Humanoid Digital Twin in Gazebo"
+        learning_objectives:
+          - "Create SDF models from URDF"
+          - "Configure Gazebo worlds for humanoid robots"
+          - "Implement ROS 2-Gazebo bridge"
+        exercises_min: 4
+
+      - id: ch07-sensor-sim
+        number: 3
+        title: "Sensor Simulation: LiDAR, Depth, IMU"
+        learning_objectives:
+          - "Configure LiDAR simulation with noise models"
+          - "Implement depth camera simulation"
+          - "Set up IMU and proprioceptive sensors"
+        exercises_min: 3
+
+      - id: ch08-unity-hri
+        number: 4
+        title: "Unity for High-Fidelity Interaction Scenes"
+        learning_objectives:
+          - "Set up Unity Robotics Hub"
+          - "Create photorealistic environments"
+          - "Implement ROS-TCP connector"
+        exercises_min: 3
+
+  - id: module-3-nvidia-isaac
+    number: 3
+    title: "The AI-Robot Brain (NVIDIA Isaac)"
+    estimated_hours: 28
+    prerequisites:
+      - module-1-ros2
+      - module-2-digital-twin
+    chapters:
+      - id: ch09-isaac-sim
+        number: 1
+        title: "Isaac Sim Photorealistic Simulation"
+        learning_objectives:
+          - "Install and configure Isaac Sim"
+          - "Import humanoid models to Omniverse"
+          - "Create domain-randomized environments"
+        exercises_min: 3
+
+      - id: ch10-isaac-ros
+        number: 2
+        title: "Isaac ROS: VSLAM & Navigation"
+        learning_objectives:
+          - "Deploy Isaac ROS packages"
+          - "Implement visual SLAM for humanoids"
+          - "Configure localization pipelines"
+        exercises_min: 4
+
+      - id: ch11-nav2-bipedal
+        number: 3
+        title: "Nav2 for Bipedal Locomotion"
+        learning_objectives:
+          - "Adapt Nav2 for bipedal robots"
+          - "Implement footstep planning"
+          - "Handle dynamic obstacle avoidance"
+        exercises_min: 3
+
+      - id: ch12-synthetic-data
+        number: 4
+        title: "Synthetic Data & Perception Pipelines"
+        learning_objectives:
+          - "Generate synthetic training data with Replicator"
+          - "Build perception pipelines for object detection"
+          - "Train and deploy perception models"
+        exercises_min: 3
+
+  - id: module-4-vla
+    number: 4
+    title: "Vision-Language-Action (VLA)"
+    estimated_hours: 24
+    prerequisites:
+      - module-1-ros2
+      - module-3-nvidia-isaac
+    chapters:
+      - id: ch13-voice-action
+        number: 1
+        title: "Voice-to-Action with Whisper + ROS 2"
+        learning_objectives:
+          - "Integrate Whisper for speech recognition"
+          - "Build voice command interfaces"
+          - "Handle multi-modal input streams"
+        exercises_min: 3
+
+      - id: ch14-llm-planning
+        number: 2
+        title: "LLM Cognitive Planning for Robots"
+        learning_objectives:
+          - "Connect LLMs to robot action spaces"
+          - "Implement task decomposition"
+          - "Handle planning failures gracefully"
+        exercises_min: 4
+
+      - id: ch15-perception-action
+        number: 3
+        title: "Perception-Action Loops"
+        learning_objectives:
+          - "Build closed-loop control systems"
+          - "Implement reactive behaviors"
+          - "Handle sensor-action latency"
+        exercises_min: 3
+
+      - id: ch16-nl-execution
+        number: 4
+        title: "Natural-Language Task Execution"
+        learning_objectives:
+          - "Parse natural language commands"
+          - "Ground language in robot actions"
+          - "Build end-to-end VLA pipelines"
+        exercises_min: 3
+
+  - id: capstone
+    number: 5
+    title: "The Autonomous Humanoid"
+    estimated_hours: 40
+    prerequisites:
+      - module-1-ros2
+      - module-2-digital-twin
+      - module-3-nvidia-isaac
+      - module-4-vla
+    chapters:
+      - id: ch17-capstone
+        number: 1
+        title: "Full Autonomous Humanoid Project"
+        learning_objectives:
+          - "Integrate navigation, perception, and manipulation"
+          - "Implement task planning with LLM"
+          - "Build end-to-end autonomous behavior"
+          - "Test and validate in simulation"
+        exercises_min: 5
+        subsystems:
+          - navigation
+          - object_detection
+          - manipulation
+          - task_planning
+
+back_matter:
+  - id: appendix-a
+    title: "Software Installation Guide"
+    required: true
+  - id: appendix-b
+    title: "Hardware Requirements & Cloud Alternatives"
+    required: true
+  - id: appendix-c
+    title: "Troubleshooting Common Issues"
+    required: true
+  - id: glossary
+    title: "Glossary"
+    required: true
+  - id: bibliography
+    title: "Bibliography"
+    required: true
+
+validation_rules:
+  - rule: "total_chapters_equals_17"
+    description: "Book must have exactly 17 chapters"
+  - rule: "module_has_3_to_4_chapters"
+    description: "Each module (except capstone) must have 3-4 chapters"
+  - rule: "chapter_has_min_3_objectives"
+    description: "Each chapter must have at least 3 learning objectives"
+  - rule: "chapter_has_exercises"
+    description: "Each chapter must have at least 3 exercises"
+  - rule: "exercise_has_troubleshooting"
+    description: "Each exercise must include troubleshooting section"
+  - rule: "total_pages_300_to_400"
+    description: "Book total must be 300-400 pages"

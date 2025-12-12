@@ -1,0 +1,171 @@
+# Chapter Content Contract
+# Defines the required structure for each chapter
+# Version: 1.0.0
+
+chapter_structure:
+  front_matter:
+    required:
+      - id: string           # Unique identifier (e.g., "ch01-intro-ros2")
+      - title: string        # Chapter title
+      - sidebar_position: int # Order in navigation
+    optional:
+      - tags: string[]       # Topic tags for search
+      - description: string  # SEO/meta description
+
+  sections:
+    - name: "Learning Objectives"
+      required: true
+      format: "bulleted_list"
+      min_items: 3
+      max_items: 5
+      template: |
+        ## Learning Objectives
+
+        By the end of this chapter, you will be able to:
+
+        - [Objective 1 - action verb + specific outcome]
+        - [Objective 2 - action verb + specific outcome]
+        - [Objective 3 - action verb + specific outcome]
+
+    - name: "Introduction"
+      required: true
+      format: "prose"
+      min_words: 200
+      template: |
+        ## Introduction
+
+        [2-3 paragraphs introducing the chapter topic, its importance,
+        and how it connects to previous/future content]
+
+    - name: "Content Sections"
+      required: true
+      format: "mixed"
+      min_sections: 3
+      max_sections: 8
+      section_template: |
+        ## [Section Title]
+
+        [Explanatory prose with technical details]
+
+        ### Subsection (if needed)
+
+        [More detailed content]
+
+        ```[language]
+        # Code example with comments
+        [code]
+        ```
+
+        **Expected Output:**
+        ```
+        [output]
+        ```
+
+    - name: "Exercises"
+      required: true
+      format: "structured"
+      min_items: 3
+      exercise_template: |
+        ## Exercises
+
+        ### Exercise [N]: [Title]
+
+        **Objective**: [What the reader will accomplish]
+
+        **Difficulty**: [Beginner/Intermediate/Advanced]
+
+        **Estimated Time**: [X minutes]
+
+        **Prerequisites**: [Prior exercises if any]
+
+        #### Instructions
+
+        1. [Step 1]
+        2. [Step 2]
+        3. [Step N]
+
+        #### Expected Outcome
+
+        [What success looks like]
+
+        #### Verification
+
+        [How to confirm completion]
+
+        #### Troubleshooting
+
+        | Issue | Possible Cause | Solution |
+        |-------|---------------|----------|
+        | [Issue 1] | [Cause] | [Fix] |
+        | [Issue 2] | [Cause] | [Fix] |
+
+    - name: "Summary"
+      required: true
+      format: "bulleted_list"
+      min_items: 3
+      template: |
+        ## Summary
+
+        In this chapter, you learned:
+
+        - [Key takeaway 1]
+        - [Key takeaway 2]
+        - [Key takeaway 3]
+
+        **Next Steps**: [Brief preview of next chapter]
+
+    - name: "References"
+      required: true
+      format: "ieee_citations"
+      min_items: 1
+      template: |
+        ## References
+
+        [1] A. Author, "Title of Article," *Journal Name*, vol. X, no. Y, pp. 1-10, Year.
+        [2] B. Author and C. Author, *Book Title*. City: Publisher, Year.
+        [3] "Web Page Title," Site Name. [Online]. Available: https://example.com. [Accessed: Date].
+
+code_example_requirements:
+  - must_specify_language: true
+  - must_include_comments: true
+  - must_show_expected_output: true
+  - must_be_runnable_standalone: "when possible"
+  - must_cite_external_sources: true
+
+  languages_supported:
+    - python
+    - cpp
+    - yaml
+    - xml
+    - bash
+    - json
+
+diagram_requirements:
+  - must_have_title: true
+  - must_have_alt_text: true
+  - must_have_caption: true
+  - preferred_format: svg
+  - fallback_format: png
+  - max_width: 800px
+
+  naming_convention: "[chapter-id]-[diagram-name].[ext]"
+  storage_path: "static/img/diagrams/"
+
+admonition_types:
+  - type: note
+    use_for: "General information and tips"
+  - type: tip
+    use_for: "Best practices and recommendations"
+  - type: info
+    use_for: "Additional context"
+  - type: caution
+    use_for: "Important warnings"
+  - type: danger
+    use_for: "Critical safety/data loss warnings"
+
+word_count_targets:
+  chapter_total: 4000-6000
+  introduction: 200-400
+  content_section: 500-1000
+  exercise: 300-500
+  summary: 150-250
