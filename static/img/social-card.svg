@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <rect width="1200" height="630" fill="#0d47a1"/>
+  <circle cx="200" cy="315" r="120" fill="#1e88e5"/>
+  <circle cx="200" cy="275" r="40" fill="#fff"/>
+  <rect x="160" y="320" width="80" height="70" rx="10" fill="#fff"/>
+  <text x="380" y="280" font-family="Arial, sans-serif" font-size="56" font-weight="bold" fill="#fff">Physical AI &amp;</text>
+  <text x="380" y="360" font-family="Arial, sans-serif" font-size="56" font-weight="bold" fill="#fff">Humanoid Robotics</text>
+  <text x="380" y="430" font-family="Arial, sans-serif" font-size="28" fill="#90caf9">A Simulation-First Approach to Building</text>
+  <text x="380" y="470" font-family="Arial, sans-serif" font-size="28" fill="#90caf9">Intelligent Humanoid Systems</text>
+</svg>

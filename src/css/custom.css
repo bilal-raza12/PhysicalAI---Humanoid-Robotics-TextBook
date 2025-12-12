@@ -1,0 +1,210 @@
+/**
+ * Physical AI & Humanoid Robotics Textbook
+ * Custom CSS for book typography and styling
+ */
+
+:root {
+  /* Primary colors - robotics-inspired blue/gray palette */
+  --ifm-color-primary: #2563eb;
+  --ifm-color-primary-dark: #1d4ed8;
+  --ifm-color-primary-darker: #1e40af;
+  --ifm-color-primary-darkest: #1e3a8a;
+  --ifm-color-primary-light: #3b82f6;
+  --ifm-color-primary-lighter: #60a5fa;
+  --ifm-color-primary-lightest: #93c5fd;
+
+  /* Code block styling */
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(37, 99, 235, 0.1);
+
+  /* Typography */
+  --ifm-font-family-base: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --ifm-heading-font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --ifm-font-family-monospace: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+
+  /* Spacing */
+  --ifm-spacing-horizontal: 1.5rem;
+  --ifm-leading: 1.75;
+}
+
+/* Dark mode overrides */
+[data-theme='dark'] {
+  --ifm-color-primary: #60a5fa;
+  --ifm-color-primary-dark: #3b82f6;
+  --ifm-color-primary-darker: #2563eb;
+  --ifm-color-primary-darkest: #1d4ed8;
+  --ifm-color-primary-light: #93c5fd;
+  --ifm-color-primary-lighter: #bfdbfe;
+  --ifm-color-primary-lightest: #dbeafe;
+  --docusaurus-highlighted-code-line-bg: rgba(96, 165, 250, 0.15);
+}
+
+/* Book-style typography */
+.markdown {
+  line-height: var(--ifm-leading);
+}
+
+.markdown h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--ifm-color-primary);
+  padding-bottom: 0.5rem;
+}
+
+.markdown h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--ifm-color-primary-dark);
+}
+
+.markdown h3 {
+  font-size: 1.375rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.markdown h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Learning objectives styling */
+.markdown h2 + ul {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border-left: 4px solid var(--ifm-color-primary);
+  padding: 1rem 1.5rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+  margin: 1rem 0;
+}
+
+[data-theme='dark'] .markdown h2 + ul {
+  background: linear-gradient(135deg, #1e3a5f 0%, #1e293b 100%);
+}
+
+/* Exercise styling */
+.markdown h3[id^="exercise"] {
+  background: linear-gradient(90deg, #fef3c7 0%, #fef9c3 100%);
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  margin-top: 2rem;
+}
+
+[data-theme='dark'] .markdown h3[id^="exercise"] {
+  background: linear-gradient(90deg, #854d0e 0%, #713f12 100%);
+  color: #fef3c7;
+}
+
+/* Code blocks */
+pre {
+  border-radius: 0.5rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+}
+
+code {
+  border-radius: 0.25rem;
+  padding: 0.125rem 0.375rem;
+}
+
+/* Tables - technical reference style */
+table {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+}
+
+table th {
+  background: var(--ifm-color-primary);
+  color: white;
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+}
+
+[data-theme='dark'] table th {
+  background: var(--ifm-color-primary-darker);
+}
+
+table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+table tr:hover {
+  background: var(--ifm-color-emphasis-100);
+}
+
+/* Admonitions */
+.admonition {
+  border-radius: 0.5rem;
+  margin: 1.5rem 0;
+}
+
+/* Figure captions */
+.markdown img + em,
+.markdown figure figcaption {
+  display: block;
+  text-align: center;
+  font-style: italic;
+  color: var(--ifm-color-emphasis-600);
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+/* Troubleshooting tables */
+.markdown table:has(th:first-child:contains("Issue")) {
+  font-size: 0.9rem;
+}
+
+/* Chapter navigation */
+.pagination-nav {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid var(--ifm-color-emphasis-200);
+}
+
+/* Sidebar styling for book structure */
+.menu__link {
+  font-size: 0.9rem;
+}
+
+.menu__list-item-collapsible > .menu__link {
+  font-weight: 600;
+}
+
+/* Module number badges */
+.theme-doc-sidebar-item-category > .menu__list-item-collapsible > .menu__link::before {
+  content: attr(data-module);
+  background: var(--ifm-color-primary);
+  color: white;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  margin-right: 0.5rem;
+}
+
+/* Print styles for book export */
+@media print {
+  .navbar,
+  .footer,
+  .pagination-nav,
+  .theme-doc-sidebar-container {
+    display: none !important;
+  }
+
+  .markdown {
+    max-width: 100%;
+    padding: 0;
+  }
+
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+}

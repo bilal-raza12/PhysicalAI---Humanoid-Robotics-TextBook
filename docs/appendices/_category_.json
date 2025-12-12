@@ -1,0 +1,10 @@
+{
+  "label": "Appendices",
+  "position": 7,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "Appendices",
+    "description": "Supplementary materials including installation guides, hardware requirements, troubleshooting, glossary, and bibliography."
+  }
+}

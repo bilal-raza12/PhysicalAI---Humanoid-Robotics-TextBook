@@ -25,14 +25,14 @@
 
 **Purpose**: Initialize Docusaurus project and CI/CD infrastructure
 
-- [ ] T001 Initialize Docusaurus 3.x project with `npx create-docusaurus@latest` in repository root
-- [ ] T002 Configure site metadata in docusaurus.config.js (title, tagline, URL, baseUrl)
-- [ ] T003 [P] Create custom CSS file at src/css/custom.css with book typography styles
-- [ ] T004 [P] Configure sidebars.js with module-based navigation structure
-- [ ] T005 [P] Create GitHub Actions workflow at .github/workflows/deploy.yml for CI/CD
-- [ ] T006 [P] Configure markdownlint with .markdownlint.json for content validation
-- [ ] T007 Create directory structure: docs/, static/img/diagrams/, static/img/screenshots/, static/code/
-- [ ] T008 [P] Add package.json scripts for lint, build, and deploy commands
+- [x] T001 Initialize Docusaurus 3.x project with `npx create-docusaurus@latest` in repository root
+- [x] T002 Configure site metadata in docusaurus.config.js (title, tagline, URL, baseUrl)
+- [x] T003 [P] Create custom CSS file at src/css/custom.css with book typography styles
+- [x] T004 [P] Configure sidebars.js with module-based navigation structure
+- [x] T005 [P] Create GitHub Actions workflow at .github/workflows/deploy.yml for CI/CD
+- [x] T006 [P] Configure markdownlint with .markdownlint.json for content validation
+- [x] T007 Create directory structure: docs/, static/img/diagrams/, static/img/screenshots/, static/code/
+- [x] T008 [P] Add package.json scripts for lint, build, and deploy commands
 - [ ] T009 Verify local development server runs with `npm run start`
 
 ---
@@ -43,21 +43,21 @@
 
 **CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T010 Create landing page at docs/intro.md with book overview and navigation guide
-- [ ] T011 [P] Create prerequisites checklist at docs/prerequisites.md with self-assessment criteria
-- [ ] T012 [P] Create conventions document at docs/conventions.md explaining notation and formatting
-- [ ] T013 [P] Create glossary structure at docs/appendices/glossary.md with initial term list
-- [ ] T014 [P] Create appendices category config at docs/appendices/_category_.json
-- [ ] T015 Create Module 1 category config at docs/module-1-ros2/_category_.json
-- [ ] T016 [P] Create Module 2 category config at docs/module-2-digital-twin/_category_.json
-- [ ] T017 [P] Create Module 3 category config at docs/module-3-nvidia-isaac/_category_.json
-- [ ] T018 [P] Create Module 4 category config at docs/module-4-vla/_category_.json
-- [ ] T019 [P] Create Capstone category config at docs/capstone/_category_.json
-- [ ] T020 Create Module 1 overview at docs/module-1-ros2/index.md with learning outcomes
-- [ ] T021 [P] Create Module 2 overview at docs/module-2-digital-twin/index.md with learning outcomes
-- [ ] T022 [P] Create Module 3 overview at docs/module-3-nvidia-isaac/index.md with learning outcomes
-- [ ] T023 [P] Create Module 4 overview at docs/module-4-vla/index.md with learning outcomes
-- [ ] T024 [P] Create Capstone overview at docs/capstone/index.md with project requirements
+- [x] T010 Create landing page at docs/intro.md with book overview and navigation guide
+- [x] T011 [P] Create prerequisites checklist at docs/prerequisites.md with self-assessment criteria
+- [x] T012 [P] Create conventions document at docs/conventions.md explaining notation and formatting
+- [x] T013 [P] Create glossary structure at docs/appendices/glossary.md with initial term list
+- [x] T014 [P] Create appendices category config at docs/appendices/_category_.json
+- [x] T015 Create Module 1 category config at docs/module-1-ros2/_category_.json
+- [x] T016 [P] Create Module 2 category config at docs/module-2-digital-twin/_category_.json
+- [x] T017 [P] Create Module 3 category config at docs/module-3-nvidia-isaac/_category_.json
+- [x] T018 [P] Create Module 4 category config at docs/module-4-vla/_category_.json
+- [x] T019 [P] Create Capstone category config at docs/capstone/_category_.json
+- [x] T020 Create Module 1 overview at docs/module-1-ros2/index.md with learning outcomes
+- [x] T021 [P] Create Module 2 overview at docs/module-2-digital-twin/index.md with learning outcomes
+- [x] T022 [P] Create Module 3 overview at docs/module-3-nvidia-isaac/index.md with learning outcomes
+- [x] T023 [P] Create Module 4 overview at docs/module-4-vla/index.md with learning outcomes
+- [x] T024 [P] Create Capstone overview at docs/capstone/index.md with project requirements
 - [ ] T025 Verify build succeeds with `npm run build` and all navigation links work
 
 **Checkpoint**: Foundation ready - user story implementation can begin
