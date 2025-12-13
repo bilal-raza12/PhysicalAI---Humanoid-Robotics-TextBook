@@ -8,7 +8,7 @@ const config: Config = {
   favicon: 'img/logo.svg',
 
   // Set the production url of your site here
-  url: 'https://your-org.github.io',
+  url: 'https://bilal-raza12.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   baseUrl: '/Physical_ai_&_Humanoid_Robotics/',
 
