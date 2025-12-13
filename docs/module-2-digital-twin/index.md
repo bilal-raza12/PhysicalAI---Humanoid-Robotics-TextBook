@@ -81,4 +81,4 @@ With simulation skills mastered, you're ready for **Module 3: The AI-Robot Brain
 
 ---
 
-_Ready to begin? Start with [Chapter 5: Introduction to Physics Simulation](./ch05-physics-sim)._
+_Chapters in this module will be available as they are completed._

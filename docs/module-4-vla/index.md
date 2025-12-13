@@ -92,4 +92,4 @@ With VLA capabilities complete, you're ready for the **Capstone Project**: build
 
 ---
 
-_Ready to begin? Start with [Chapter 13: Voice-to-Action with Whisper + ROS 2](./ch13-voice-action)._
+_Chapters in this module will be available as they are completed._

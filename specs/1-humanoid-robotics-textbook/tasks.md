@@ -33,7 +33,7 @@
 - [x] T006 [P] Configure markdownlint with .markdownlint.json for content validation
 - [x] T007 Create directory structure: docs/, static/img/diagrams/, static/img/screenshots/, static/code/
 - [x] T008 [P] Add package.json scripts for lint, build, and deploy commands
-- [ ] T009 Verify local development server runs with `npm run start`
+- [x] T009 Verify local development server runs with `npm run start`
 
 ---
 
@@ -58,7 +58,7 @@
 - [x] T022 [P] Create Module 3 overview at docs/module-3-nvidia-isaac/index.md with learning outcomes
 - [x] T023 [P] Create Module 4 overview at docs/module-4-vla/index.md with learning outcomes
 - [x] T024 [P] Create Capstone overview at docs/capstone/index.md with project requirements
-- [ ] T025 Verify build succeeds with `npm run build` and all navigation links work
+- [x] T025 Verify build succeeds with `npm run build` and all navigation links work
 
 **Checkpoint**: Foundation ready - user story implementation can begin
 

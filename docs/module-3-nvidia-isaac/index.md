@@ -95,4 +95,4 @@ With AI-powered simulation and navigation mastered, you're ready for **Module 4:
 
 ---
 
-_Ready to begin? Start with [Chapter 9: Isaac Sim Photorealistic Simulation](./ch09-isaac-sim)._
+_Chapters in this module will be available as they are completed._

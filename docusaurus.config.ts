@@ -73,11 +73,11 @@ const config: Config = {
           items: [
             {
               label: 'Introduction',
-              to: '/docs/intro',
+              to: 'docs',
             },
             {
               label: 'Prerequisites',
-              to: '/docs/prerequisites',
+              to: 'docs/prerequisites',
             },
           ],
         },
@@ -86,19 +86,19 @@ const config: Config = {
           items: [
             {
               label: 'Module 1: ROS 2',
-              to: '/docs/module-1-ros2',
+              to: 'docs/module-1-ros2',
             },
             {
               label: 'Module 2: Digital Twin',
-              to: '/docs/module-2-digital-twin',
+              to: 'docs/module-2-digital-twin',
             },
             {
               label: 'Module 3: NVIDIA Isaac',
-              to: '/docs/module-3-nvidia-isaac',
+              to: 'docs/module-3-nvidia-isaac',
             },
             {
               label: 'Module 4: VLA',
-              to: '/docs/module-4-vla',
+              to: 'docs/module-4-vla',
             },
           ],
         },
@@ -107,15 +107,15 @@ const config: Config = {
           items: [
             {
               label: 'Capstone Project',
-              to: '/docs/capstone',
+              to: 'docs/capstone',
             },
             {
               label: 'Appendices',
-              to: '/docs/appendices',
+              to: 'docs/category/appendices',
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/your-org/Physical_ai_&_Humanoid_Robotics',
+              href: 'https://github.com/your-org/Physical_ai_Humanoid_Robotics',
             },
           ],
         },

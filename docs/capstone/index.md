@@ -146,4 +146,4 @@ Consider extending your project with:
 
 ---
 
-_Ready to build your autonomous humanoid? Start with [Chapter 17: Full Autonomous Humanoid Project](./ch17-autonomous-humanoid)._
+_The capstone chapter will be available as the module content is completed._

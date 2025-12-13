@@ -17,11 +17,10 @@ const sidebars: SidebarsConfig = {
         id: 'module-1-ros2/index',
       },
       items: [
-        // Chapters will be added as they are created:
-        // 'module-1-ros2/ch01-intro-ros2',
-        // 'module-1-ros2/ch02-nodes-topics',
-        // 'module-1-ros2/ch03-urdf-kinematics',
-        // 'module-1-ros2/ch04-python-agents',
+        'module-1-ros2/ch01-intro-ros2',
+        'module-1-ros2/ch02-nodes-topics',
+        'module-1-ros2/ch03-urdf-kinematics',
+        'module-1-ros2/ch04-python-agents',
       ],
     },
     {

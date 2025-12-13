@@ -81,4 +81,4 @@ After completing this module, you'll have a solid foundation in ROS 2 and humano
 
 ---
 
-_Ready to begin? Start with [Chapter 1: Introduction to ROS 2 for Humanoids](./ch01-intro-ros2)._
+_Chapters in this module will be available as they are completed._
