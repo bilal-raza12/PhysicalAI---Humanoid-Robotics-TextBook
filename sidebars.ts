@@ -60,9 +60,9 @@ const sidebars: SidebarsConfig = {
       },
       items: [
         'module-4-vla/ch13-vla-intro',
-        // 'module-4-vla/ch14-llm-planning',  // Contains f-strings that need escaping
-        // 'module-4-vla/ch15-multimodal-perception',
-        // 'module-4-vla/ch16-embodied-agents',
+        'module-4-vla/ch14-llm-planning',
+        'module-4-vla/ch15-multimodal-perception',
+        'module-4-vla/ch16-embodied-agents',
       ],
     },
     {

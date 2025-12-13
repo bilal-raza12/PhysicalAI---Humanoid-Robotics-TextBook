@@ -2,8 +2,9 @@
 id: ch14-llm-planning
 title: "Chapter 14: LLM-Powered Task Planning"
 sidebar_position: 3
-format: md
 ---
+
+{/* This file uses raw code blocks to prevent MDX from parsing Python f-strings */}
 
 # Chapter 14: LLM-Powered Task Planning
 
@@ -158,7 +159,7 @@ Generate the plan:"""
 
     def _format_skills(self) -> str:
         """Format available skills for the prompt."""
-        return "\n".join([f"- \{skill\}" for skill in self.skills])
+        return "\n".join(["- " + skill for skill in self.skills])
 
     def _format_state(self, state: Dict) -> str:
         """Format current state for the prompt."""
