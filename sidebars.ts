@@ -31,11 +31,10 @@ const sidebars: SidebarsConfig = {
         id: 'module-2-digital-twin/index',
       },
       items: [
-        // Chapters will be added as they are created:
-        // 'module-2-digital-twin/ch05-physics-sim',
-        // 'module-2-digital-twin/ch06-gazebo-twin',
-        // 'module-2-digital-twin/ch07-sensor-sim',
-        // 'module-2-digital-twin/ch08-unity-hri',
+        'module-2-digital-twin/ch05-physics-sim',
+        'module-2-digital-twin/ch06-gazebo-twin',
+        'module-2-digital-twin/ch07-sensor-sim',
+        'module-2-digital-twin/ch08-unity-hri',
       ],
     },
     {
@@ -46,11 +45,10 @@ const sidebars: SidebarsConfig = {
         id: 'module-3-nvidia-isaac/index',
       },
       items: [
-        // Chapters will be added as they are created:
-        // 'module-3-nvidia-isaac/ch09-isaac-sim',
-        // 'module-3-nvidia-isaac/ch10-isaac-ros',
-        // 'module-3-nvidia-isaac/ch11-nav2-bipedal',
-        // 'module-3-nvidia-isaac/ch12-synthetic-data',
+        'module-3-nvidia-isaac/ch09-isaac-intro',
+        'module-3-nvidia-isaac/ch10-synthetic-data',
+        'module-3-nvidia-isaac/ch11-reinforcement-learning',
+        'module-3-nvidia-isaac/ch12-sim2real',
       ],
     },
     {
@@ -61,11 +59,10 @@ const sidebars: SidebarsConfig = {
         id: 'module-4-vla/index',
       },
       items: [
-        // Chapters will be added as they are created:
-        // 'module-4-vla/ch13-voice-action',
-        // 'module-4-vla/ch14-llm-planning',
-        // 'module-4-vla/ch15-perception-action',
-        // 'module-4-vla/ch16-nl-execution',
+        'module-4-vla/ch13-vla-intro',
+        // 'module-4-vla/ch14-llm-planning',  // Contains f-strings that need escaping
+        // 'module-4-vla/ch15-multimodal-perception',
+        // 'module-4-vla/ch16-embodied-agents',
       ],
     },
     {
@@ -76,8 +73,7 @@ const sidebars: SidebarsConfig = {
         id: 'capstone/index',
       },
       items: [
-        // Chapters will be added as they are created:
-        // 'capstone/ch17-autonomous-humanoid',
+        'capstone/ch17-capstone-project',
       ],
     },
     {
