@@ -10,11 +10,13 @@ const config: Config = {
   // Set the production url of your site here
   url: 'https://bilal-raza12.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
-  baseUrl: '/Physical_ai_&_Humanoid_Robotics/',
+  baseUrl: '/PhysicalAI---Humanoid-Robotics-TextBook/',
 
   // GitHub pages deployment config
-  organizationName: 'your-org',
-  projectName: 'Physical_ai_&_Humanoid_Robotics',
+  organizationName: 'bilal-raza12',
+  projectName: 'PhysicalAI---Humanoid-Robotics-TextBook',
+  trailingSlash: false, // 'true' to generate paths with a trailing slash '/docs/',
+
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
