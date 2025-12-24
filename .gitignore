@@ -56,3 +56,23 @@ coverage/
 
 # Local development
 .cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+*.egg-info/
+dist/
+build/
+*.egg
+
+# RAG Pipeline data files
+pages.json
+chunks.json
+embeddings.json
