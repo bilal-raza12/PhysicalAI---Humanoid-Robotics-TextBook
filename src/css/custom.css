@@ -75,6 +75,27 @@
 }
 
 /* =============================================================================
+   GLOBAL - Prevent horizontal overflow on mobile
+   ============================================================================= */
+
+html {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+  position: relative;
+}
+
+/* Ensure main content doesn't overflow */
+#__docusaurus {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* =============================================================================
    NAVBAR - Stunning gradient navbar
    ============================================================================= */
 

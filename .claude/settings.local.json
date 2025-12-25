@@ -19,7 +19,10 @@
       "WebFetch(domain:openai.github.io)",
       "WebFetch(domain:github.com)",
       "Bash(uv sync:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(git checkout:*)",
+      "Bash(git merge:*)",
+      "Bash(git push:*)"
     ]
   }
 }

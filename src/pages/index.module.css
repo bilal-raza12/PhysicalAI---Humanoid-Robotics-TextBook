@@ -1122,6 +1122,10 @@
 }
 
 @media (max-width: 600px) {
+  .heroSection {
+    overflow: hidden;
+  }
+
   .heroTitle {
     font-size: 2.25rem;
   }
@@ -1150,6 +1154,35 @@
     justify-content: center;
   }
 
+  /* Hide complex robot visual on mobile - too wide */
+  .heroVisual {
+    width: 100%;
+    max-width: 320px;
+    height: 250px;
+    margin: 2rem auto 0;
+    overflow: hidden;
+  }
+
+  /* Hide tech labels on mobile - they cause overflow */
+  .techLabels {
+    display: none;
+  }
+
+  /* Hide code snippets on mobile */
+  .codeSnippets {
+    display: none;
+  }
+
+  /* Scale down robot container */
+  .robotContainer {
+    transform: scale(0.7);
+  }
+
+  /* Hide orbit ring on mobile */
+  .orbitRing {
+    display: none;
+  }
+
   .featuresGrid {
     grid-template-columns: 1fr;
   }
@@ -1166,6 +1199,28 @@
 
   .capstoneTitle {
     font-size: 1.75rem;
+  }
+}
+
+/* Extra small mobile */
+@media (max-width: 400px) {
+  .heroVisual {
+    width: 100%;
+    max-width: 280px;
+    height: 200px;
+  }
+
+  .robotContainer {
+    transform: scale(0.55);
+  }
+
+  .heroTitle {
+    font-size: 1.85rem;
+  }
+
+  .badge {
+    font-size: 0.8rem;
+    padding: 6px 12px;
   }
 }
 
