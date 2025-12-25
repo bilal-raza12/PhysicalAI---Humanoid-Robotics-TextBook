@@ -129,6 +129,64 @@ Sources: 1 unique pages
 }
 ```
 
+### Part 3: AI Agent Q&A
+
+Ask natural language questions about the textbook using the AI agent:
+
+```bash
+# Basic question
+uv run python main.py ask "What is ROS 2?"
+
+# Custom number of chunks (K must be 3-8)
+uv run python main.py ask "How do sensors work?" --k 3
+
+# JSON output format
+uv run python main.py ask "What is motion planning?" --format json
+
+# Verbose mode (shows retrieval details)
+uv run python main.py ask "What is NVIDIA Isaac?" --verbose
+
+# Custom score threshold (default: 0.3)
+uv run python main.py ask "digital twin" --threshold 0.5
+```
+
+#### Ask Command Options
+
+| Option | Short | Default | Description |
+|--------|-------|---------|-------------|
+| `question` | | (required) | Natural language question about the textbook |
+| `--k` | | 5 | Number of chunks to retrieve (3-8) |
+| `--threshold` | | 0.3 | Minimum score threshold for relevance |
+| `--format` | `-f` | text | Output format: `text` or `json` |
+| `--verbose` | `-v` | false | Show retrieval details and timing |
+
+#### Example Output (Text)
+```
+Question: What is ROS 2?
+
+Answer:
+ROS 2 (Robot Operating System 2) is a flexible framework for writing robot
+software. It provides libraries and tools to help developers create robot
+applications...
+
+Sources:
+[1] https://bilal-raza12.github.io/.../ch01-intro-ros2
+    Chapter: module-1-ros2 | Section: Learning Objectives | Score: 0.87
+```
+
+#### Refusal Behavior
+
+When the question is off-topic or not covered in the textbook:
+```
+Question: What is the capital of France?
+
+I cannot answer this question based on the textbook content.
+No relevant information was found.
+
+Please try rephrasing your question or ask about topics covered in the
+Physical AI & Humanoid Robotics textbook.
+```
+
 ## Exit Codes
 
 | Code | Meaning |
@@ -139,10 +197,21 @@ Sources: 1 unique pages
 
 ## Architecture
 
+### Search Command (Part 2)
 ```
 Query -> Validate -> Cohere Embed -> Qdrant Search -> Format Output
+```
+
+### Ask Command (Part 3)
+```
+Question -> Agent -> search_textbook Tool -> Cohere Embed -> Qdrant Search
+                                                                    |
+                                                                    v
+                          Format Response <- Generate Answer <- Context
 ```
 
 - **Embedding Model**: Cohere embed-english-v3.0 (1024 dimensions)
 - **Vector Distance**: Cosine similarity
 - **Input Type**: `search_query` for queries, `search_document` for chunks
+- **Agent Model**: OpenAI gpt-4o-mini (configurable)
+- **Grounding**: System prompt enforces context-only responses

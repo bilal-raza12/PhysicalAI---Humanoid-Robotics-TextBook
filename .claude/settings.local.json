@@ -13,7 +13,11 @@
       "Bash(uv init:*)",
       "Bash(uv add:*)",
       "Bash(uv run python:*)",
-      "Bash(git fetch:*)"
+      "Bash(git fetch:*)",
+      "Bash(find:*)",
+      "WebSearch",
+      "WebFetch(domain:openai.github.io)",
+      "WebFetch(domain:github.com)"
     ]
   }
 }

@@ -9,6 +9,7 @@ dependencies = [
     "cohere>=5.20.1",
     "httpx>=0.28.1",
     "lxml>=6.0.2",
+    "openai-agents>=0.6.4",
     "python-dotenv>=1.2.1",
     "qdrant-client>=1.16.2",
     "tiktoken>=0.12.0",

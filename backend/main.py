@@ -24,8 +24,12 @@ from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
 from typing import Optional
+import asyncio
 
 import httpx
+
+# OpenAI Agents SDK imports (Part 3)
+from agents import Agent, Runner, function_tool, ModelSettings
 import tiktoken
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
@@ -1370,6 +1374,367 @@ def run_search(
 
 
 # =============================================================================
+# RAG Agent Pipeline (Part 3) - Agent Integration
+# =============================================================================
+# This section implements the AI agent using OpenAI Agents SDK that:
+# - Uses the retrieval pipeline (Part 2) as a tool
+# - Provides grounded Q&A over textbook content
+# - Refuses to answer when context is insufficient
+# - Includes source citations in all responses
+# =============================================================================
+
+
+# -----------------------------------------------------------------------------
+# T007-T010: Agent Dataclasses
+# -----------------------------------------------------------------------------
+
+
+@dataclass
+class AgentConfig:
+    """Configuration for the RAG agent."""
+
+    model: str = "gpt-4o-mini"
+    temperature: float = 0.0  # Deterministic for grounding
+    k: int = 5  # Number of chunks to retrieve
+    score_threshold: float = 0.3  # Below this = refuse
+    tool_choice: str = "required"  # Always invoke retrieval
+    collection_name: str = "textbook_chunks"
+
+
+@dataclass
+class GroundingContext:
+    """Context assembled for agent grounding."""
+
+    chunks: list  # list[RetrievedChunk]
+    formatted_text: str
+    should_refuse: bool
+    refusal_reason: str = ""
+    max_score: float = 0.0
+    query: str = ""
+
+    @property
+    def source_count(self) -> int:
+        """Number of unique sources."""
+        return len(set(c.source_url for c in self.chunks))
+
+
+@dataclass
+class Citation:
+    """Source citation for a retrieved chunk."""
+
+    source_url: str
+    chapter: str
+    section: str
+    score: float
+    chunk_index: int
+
+    def format(self) -> str:
+        """Format as inline citation."""
+        return f"[Source: {self.source_url} | Chapter: {self.chapter} | Section: {self.section} | Score: {self.score:.2f}]"
+
+
+@dataclass
+class AgentResponse:
+    """Structured response from the RAG agent."""
+
+    answer: str
+    citations: list  # list[Citation]
+    query: str
+    grounded: bool  # True if answer uses retrieved context
+    refused: bool  # True if agent refused to answer
+    retrieval_time_ms: float = 0.0
+    generation_time_ms: float = 0.0
+    tool_calls: list = field(default_factory=list)
+
+    @property
+    def total_time_ms(self) -> float:
+        return self.retrieval_time_ms + self.generation_time_ms
+
+
+# -----------------------------------------------------------------------------
+# T011: Agent Constants
+# -----------------------------------------------------------------------------
+
+DEFAULT_SCORE_THRESHOLD = 0.3
+MIN_CHUNKS_FOR_ANSWER = 1
+DEFAULT_AGENT_K = 5
+MAX_AGENT_K = 8
+MIN_AGENT_K = 3
+
+# Refusal messages
+REFUSAL_NO_CONTEXT = (
+    "I cannot answer this question based on the textbook content. "
+    "No relevant information was found."
+)
+REFUSAL_LOW_SCORE = (
+    "I cannot answer this question with confidence. "
+    "The retrieved content has low relevance to your question."
+)
+REFUSAL_OFF_TOPIC = (
+    "This question appears to be outside the scope of the "
+    "Physical AI & Humanoid Robotics textbook."
+)
+
+# -----------------------------------------------------------------------------
+# T012: Grounding System Prompt
+# -----------------------------------------------------------------------------
+
+GROUNDING_PROMPT = """You are a helpful assistant for the Physical AI & Humanoid Robotics textbook.
+
+## CRITICAL RULES
+
+1. **ALWAYS use the search_textbook tool** before answering any question
+2. **ONLY use information from retrieved context** - never use your pre-training knowledge
+3. **REFUSE to answer** if:
+   - The tool returns "[NO_RELEVANT_CONTEXT]" or "[REFUSAL]"
+   - No relevant content is found
+   - The question is unrelated to robotics/AI topics
+4. **Include source citations** in every answer
+
+## REFUSAL TEMPLATE
+
+When refusing, respond with:
+"I cannot answer this question based on the textbook content. The search found no relevant information.
+Please try rephrasing your question or ask about topics covered in the Physical AI & Humanoid Robotics textbook."
+
+## CITATION FORMAT
+
+After your answer, list sources used:
+
+Sources:
+[1] URL | Chapter: X | Section: Y | Score: 0.XX
+
+## ANSWER STRUCTURE
+
+1. Direct answer to the question (grounded in retrieved content)
+2. Supporting details from context
+3. Source citations
+"""
+
+
+# -----------------------------------------------------------------------------
+# T013: Format context for agent consumption
+# -----------------------------------------------------------------------------
+
+
+def format_context_for_agent(
+    result: RetrievalResult, threshold: float = DEFAULT_SCORE_THRESHOLD
+) -> str:
+    """Format retrieved chunks for agent consumption with refusal check."""
+    if result is None or result.count == 0:
+        return "[NO_RELEVANT_CONTEXT] No content retrieved from knowledge base."
+
+    # Check if all scores are below threshold
+    max_score = max(c.score for c in result.chunks)
+    if max_score < threshold:
+        return f"[REFUSAL] All retrieved content has low relevance (max score: {max_score:.2f} < threshold: {threshold})"
+
+    # Format chunks for agent
+    sections = []
+    for i, chunk in enumerate(result.chunks, 1):
+        section = f"""
+--- Context {i} (Score: {chunk.score:.3f}) ---
+Source: {chunk.source_url}
+Chapter: {chunk.chapter}
+Section: {chunk.section}
+
+{chunk.text}
+"""
+        sections.append(section)
+
+    return "\n".join(sections)
+
+
+# -----------------------------------------------------------------------------
+# T014: search_textbook tool wrapper
+# -----------------------------------------------------------------------------
+
+# Global config for agent (can be overridden per request)
+_agent_config = AgentConfig()
+
+
+@function_tool
+def search_textbook(query: str) -> str:
+    """
+    Search the Physical AI & Humanoid Robotics textbook for relevant content.
+
+    Args:
+        query: Natural language question about robotics, AI, or related topics
+
+    Returns:
+        Retrieved context with source citations, or refusal message if no relevant content found
+    """
+    logger.info(f"search_textbook tool invoked with query: {query[:100]}...")
+
+    result, error = search_knowledge_base(
+        query, k=_agent_config.k, collection_name=_agent_config.collection_name
+    )
+
+    if error:
+        logger.error(f"Retrieval error: {error}")
+        return f"[ERROR] Unable to search the knowledge base: {error}"
+
+    formatted = format_context_for_agent(result, _agent_config.score_threshold)
+    logger.info(
+        f"Retrieved {result.count} chunks, max_score={max(c.score for c in result.chunks) if result.chunks else 0:.3f}"
+    )
+
+    return formatted
+
+
+# -----------------------------------------------------------------------------
+# T015-T016: Agent instance and ask_agent function
+# -----------------------------------------------------------------------------
+
+
+def create_agent(config: AgentConfig = None) -> Agent:
+    """Create the RAG agent with configured tools and settings."""
+    global _agent_config
+    if config:
+        _agent_config = config
+
+    return Agent(
+        name="textbook_qa",
+        instructions=GROUNDING_PROMPT,
+        tools=[search_textbook],
+        model=_agent_config.model,
+        model_settings=ModelSettings(
+            tool_choice="required", temperature=_agent_config.temperature
+        ),
+    )
+
+
+async def ask_agent(question: str, config: AgentConfig = None) -> AgentResponse:
+    """Ask the agent a question and get a grounded response."""
+    import time
+
+    if config is None:
+        config = AgentConfig()
+
+    agent = create_agent(config)
+
+    start_time = time.time()
+
+    try:
+        result = await Runner.run(agent, question)
+        generation_time_ms = (time.time() - start_time) * 1000
+
+        # Check if response indicates refusal
+        answer = result.final_output
+        refused = (
+            "[NO_RELEVANT_CONTEXT]" in answer
+            or "[REFUSAL]" in answer
+            or "cannot answer" in answer.lower()
+        )
+
+        return AgentResponse(
+            answer=answer,
+            citations=[],  # Will be populated in T032
+            query=question,
+            grounded=not refused,
+            refused=refused,
+            retrieval_time_ms=0,  # TODO: Track separately
+            generation_time_ms=generation_time_ms,
+            tool_calls=["search_textbook"],
+        )
+
+    except Exception as e:
+        logger.error(f"Agent error: {e}")
+        return AgentResponse(
+            answer=f"Error: {str(e)}",
+            citations=[],
+            query=question,
+            grounded=False,
+            refused=False,
+            retrieval_time_ms=0,
+            generation_time_ms=0,
+            tool_calls=[],
+        )
+
+
+# -----------------------------------------------------------------------------
+# T017: Format response for text output
+# -----------------------------------------------------------------------------
+
+
+def format_agent_response_text(response: AgentResponse) -> str:
+    """Format agent response for text output."""
+    output = []
+    output.append(f"Question: {response.query}")
+    output.append("")
+
+    if response.refused:
+        output.append(response.answer)
+    else:
+        output.append("Answer:")
+        output.append(response.answer)
+
+    output.append("")
+    output.append(
+        f"[Grounded: {response.grounded} | Time: {response.total_time_ms:.0f}ms]"
+    )
+
+    return "\n".join(output)
+
+
+# -----------------------------------------------------------------------------
+# T018-T019: CLI ask command
+# -----------------------------------------------------------------------------
+
+
+def run_ask(
+    question: str,
+    k: int = DEFAULT_AGENT_K,
+    threshold: float = DEFAULT_SCORE_THRESHOLD,
+    output_format: str = "text",
+    verbose: bool = False,
+    collection_name: str = DEFAULT_COLLECTION,
+) -> int:
+    """Execute ask command and return exit code."""
+    # Validate question
+    if not question or not question.strip():
+        safe_print("Error: Question cannot be empty")
+        return 2
+
+    # Create config
+    config = AgentConfig(
+        k=k, score_threshold=threshold, collection_name=collection_name
+    )
+
+    # Run agent
+    try:
+        response = asyncio.run(ask_agent(question, config))
+    except Exception as e:
+        safe_print(f"Error: {e}")
+        return 1
+
+    # Output response
+    if output_format == "json":
+        output = {
+            "question": response.query,
+            "answer": response.answer,
+            "grounded": response.grounded,
+            "refused": response.refused,
+            "citations": (
+                [asdict(c) for c in response.citations] if response.citations else []
+            ),
+            "metadata": {
+                "retrieval_time_ms": response.retrieval_time_ms,
+                "generation_time_ms": response.generation_time_ms,
+                "total_time_ms": response.total_time_ms,
+                "tool_calls": response.tool_calls,
+            },
+        }
+        safe_print(json.dumps(output, indent=2))
+    else:
+        safe_print(format_agent_response_text(response))
+
+    return (
+        0 if not response.refused or response.grounded else 0
+    )  # Refusal is success, not error
+
+
+# =============================================================================
 # T053-T056: Full pipeline integration
 # =============================================================================
 
@@ -1545,6 +1910,39 @@ def create_parser() -> argparse.ArgumentParser:
         "--collection", default=DEFAULT_COLLECTION, help="Qdrant collection name"
     )
 
+    # ask command (Part 3 - Agent Integration)
+    ask_parser = subparsers.add_parser(
+        "ask", help="Ask a question about the textbook using the AI agent"
+    )
+    ask_parser.add_argument(
+        "question", help="Natural language question about the textbook"
+    )
+    ask_parser.add_argument(
+        "--k",
+        type=int,
+        default=DEFAULT_AGENT_K,
+        help="Number of chunks to retrieve (3-8, default: 5)",
+    )
+    ask_parser.add_argument(
+        "--threshold",
+        type=float,
+        default=DEFAULT_SCORE_THRESHOLD,
+        help="Minimum relevance score (0.0-1.0, default: 0.3)",
+    )
+    ask_parser.add_argument(
+        "--format",
+        "-f",
+        choices=["text", "json"],
+        default="text",
+        help="Output format (default: text)",
+    )
+    ask_parser.add_argument(
+        "--verbose", "-v", action="store_true", help="Show retrieval details"
+    )
+    ask_parser.add_argument(
+        "--collection", default=DEFAULT_COLLECTION, help="Qdrant collection name"
+    )
+
     return parser
 
 
@@ -1581,6 +1979,16 @@ def main() -> int:
 
     elif args.command == "search":
         return run_search(args.query, args.k, args.format, args.collection)
+
+    elif args.command == "ask":
+        return run_ask(
+            args.question,
+            args.k,
+            args.threshold,
+            args.format,
+            args.verbose,
+            args.collection,
+        )
 
     return 0
 
