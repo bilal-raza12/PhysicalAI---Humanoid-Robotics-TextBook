@@ -158,6 +158,94 @@ body {
   width: 80%;
 }
 
+/* Mobile navbar toggle (hamburger menu) */
+.navbar__toggle {
+  color: white !important;
+  margin-right: 8px;
+}
+
+.navbar__toggle svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Mobile sidebar */
+.navbar-sidebar {
+  background: var(--ifm-background-surface-color) !important;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme='dark'] .navbar-sidebar {
+  background: #1a1a2e !important;
+}
+
+.navbar-sidebar__brand {
+  background: var(--gradient-primary) !important;
+  padding: 16px !important;
+}
+
+.navbar-sidebar__brand .navbar__title {
+  color: white !important;
+  -webkit-text-fill-color: white !important;
+}
+
+.navbar-sidebar__close {
+  color: white !important;
+}
+
+.navbar-sidebar__items {
+  padding: 16px 8px;
+}
+
+.navbar-sidebar__item {
+  padding: 0;
+}
+
+.navbar-sidebar .menu__link {
+  color: var(--ifm-color-content) !important;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin: 4px 8px;
+  font-size: 1rem;
+}
+
+.navbar-sidebar .menu__link:hover {
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--ifm-color-primary) !important;
+}
+
+.navbar-sidebar .menu__link--active {
+  background: var(--gradient-primary) !important;
+  color: white !important;
+}
+
+/* Mobile sidebar backdrop */
+.navbar-sidebar__backdrop {
+  background: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Ensure navbar is visible on mobile */
+@media (max-width: 996px) {
+  .navbar {
+    padding: 0 16px;
+  }
+
+  .navbar__toggle {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+  }
+
+  .navbar__brand {
+    margin-right: auto;
+  }
+
+  .navbar__items--right {
+    flex: 0;
+  }
+}
+
 /* =============================================================================
    SIDEBAR - Modern, clean sidebar
    ============================================================================= */
@@ -216,6 +304,56 @@ body {
 .theme-doc-sidebar-menu::-webkit-scrollbar-thumb {
   background: var(--ifm-color-primary-lighter);
   border-radius: 3px;
+}
+
+/* Mobile sidebar toggle button */
+button[class*="sidebarButton"],
+.menu__button,
+[class*="toggleButton_"] {
+  background: var(--gradient-primary) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 8px 12px !important;
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+}
+
+button[class*="sidebarButton"]:hover,
+.menu__button:hover,
+[class*="toggleButton_"]:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-1px);
+}
+
+/* Mobile sidebar styles */
+@media (max-width: 996px) {
+  /* Ensure sidebar is properly styled on mobile */
+  .theme-doc-sidebar-container {
+    background: var(--ifm-background-surface-color) !important;
+    z-index: 100 !important;
+  }
+
+  [data-theme='dark'] .theme-doc-sidebar-container {
+    background: #1a1a2e !important;
+  }
+
+  /* Mobile doc sidebar menu */
+  .theme-doc-sidebar-menu {
+    padding: 8px !important;
+  }
+
+  /* Ensure menu is scrollable */
+  .menu {
+    overflow-y: auto !important;
+    max-height: calc(100vh - var(--ifm-navbar-height) - 60px) !important;
+  }
+
+  /* Style sidebar expand/collapse buttons */
+  .menu__caret,
+  .menu__link--sublist-caret::after {
+    color: var(--ifm-color-primary) !important;
+  }
 }
 
 /* =============================================================================
