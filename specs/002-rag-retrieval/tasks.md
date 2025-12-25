@@ -25,9 +25,9 @@
 
 **Purpose**: Verify Part 1 infrastructure and prepare for retrieval implementation
 
-- [ ] T001 Verify Part 1 pipeline complete by running `uv run python main.py verify` in backend/
-- [ ] T002 [P] Read existing search_vectors function in backend/main.py to understand current implementation
-- [ ] T003 [P] Create comment block marking retrieval section start in backend/main.py
+- [x] T001 Verify Part 1 pipeline complete by running `uv run python main.py verify` in backend/
+- [x] T002 [P] Read existing search_vectors function in backend/main.py to understand current implementation
+- [x] T003 [P] Create comment block marking retrieval section start in backend/main.py
 
 ---
 
@@ -37,11 +37,11 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T004 Add RetrievedChunk dataclass in backend/main.py (from data-model.md)
-- [ ] T005 [P] Add RetrievalResult dataclass in backend/main.py (from data-model.md)
-- [ ] T006 [P] Add AssembledContext dataclass in backend/main.py (from data-model.md)
-- [ ] T007 Add validate_query function in backend/main.py (empty check, length check)
-- [ ] T008 Add validate_k function in backend/main.py (range 3-8 clamping)
+- [x] T004 Add RetrievedChunk dataclass in backend/main.py (from data-model.md)
+- [x] T005 [P] Add RetrievalResult dataclass in backend/main.py (from data-model.md)
+- [x] T006 [P] Add AssembledContext dataclass in backend/main.py (from data-model.md)
+- [x] T007 Add validate_query function in backend/main.py (empty check, length check)
+- [x] T008 Add validate_k function in backend/main.py (range 3-8 clamping)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin
 
@@ -55,12 +55,12 @@
 
 ### Implementation for User Story 1
 
-- [ ] T009 [US1] Add generate_query_embedding function in backend/main.py (input_type="search_query")
-- [ ] T010 [US1] Add retrieve_chunks function in backend/main.py (calls Qdrant query_points)
-- [ ] T011 [US1] Add convert_qdrant_result_to_chunk function in backend/main.py (maps payload to RetrievedChunk)
-- [ ] T012 [US1] Add search_knowledge_base function in backend/main.py (orchestrates embedding + retrieval)
-- [ ] T013 [US1] Add search CLI subcommand with --query argument in backend/main.py
-- [ ] T014 [US1] Test TC-001: Basic query returns results with `--query "What is ROS 2?"`
+- [x] T009 [US1] Add generate_query_embedding function in backend/main.py (input_type="search_query")
+- [x] T010 [US1] Add retrieve_chunks function in backend/main.py (calls Qdrant query_points)
+- [x] T011 [US1] Add convert_qdrant_result_to_chunk function in backend/main.py (maps payload to RetrievedChunk)
+- [x] T012 [US1] Add search_knowledge_base function in backend/main.py (orchestrates embedding + retrieval)
+- [x] T013 [US1] Add search CLI subcommand with --query argument in backend/main.py
+- [x] T014 [US1] Test TC-001: Basic query returns results with `--query "What is ROS 2?"`
 
 **Checkpoint**: User Story 1 complete - basic search works with default K=5
 
@@ -74,11 +74,11 @@
 
 ### Implementation for User Story 2
 
-- [ ] T015 [US2] Add --k argument to search CLI command in backend/main.py
-- [ ] T016 [US2] Integrate validate_k into search flow in backend/main.py
-- [ ] T017 [US2] Add K clamping warning message to output in backend/main.py
-- [ ] T018 [US2] Test TC-002: Custom K returns correct count with `--query "sensors" --k 3`
-- [ ] T019 [US2] Test TC-003: K clamping works with `--query "sensors" --k 15`
+- [x] T015 [US2] Add --k argument to search CLI command in backend/main.py
+- [x] T016 [US2] Integrate validate_k into search flow in backend/main.py
+- [x] T017 [US2] Add K clamping warning message to output in backend/main.py
+- [x] T018 [US2] Test TC-002: Custom K returns correct count with `--query "sensors" --k 3`
+- [x] T019 [US2] Test TC-003: K clamping works with `--query "sensors" --k 15`
 
 **Checkpoint**: User Story 2 complete - K parameter works correctly
 
@@ -92,11 +92,11 @@
 
 ### Implementation for User Story 3
 
-- [ ] T020 [US3] Add format_chunk_text function in backend/main.py (creates text block per chunk)
-- [ ] T021 [US3] Add assemble_context function in backend/main.py (creates AssembledContext)
-- [ ] T022 [US3] Update search command to show formatted context output in backend/main.py
-- [ ] T023 [US3] Add context summary footer (chunk count, character count, unique sources) in backend/main.py
-- [ ] T024 [US3] Test context assembly: verify metadata visible for each result
+- [x] T020 [US3] Add format_chunk_text function in backend/main.py (creates text block per chunk)
+- [x] T021 [US3] Add assemble_context function in backend/main.py (creates AssembledContext)
+- [x] T022 [US3] Update search command to show formatted context output in backend/main.py
+- [x] T023 [US3] Add context summary footer (chunk count, character count, unique sources) in backend/main.py
+- [x] T024 [US3] Test context assembly: verify metadata visible for each result
 
 **Checkpoint**: User Story 3 complete - results show full metadata and context summary
 
@@ -110,12 +110,12 @@
 
 ### Implementation for User Story 4
 
-- [ ] T025 [US4] Add empty result handling in search_knowledge_base in backend/main.py
-- [ ] T026 [US4] Add "No matching content found" message for empty results in backend/main.py
-- [ ] T027 [US4] Add collection-not-found error handling in backend/main.py
-- [ ] T028 [US4] Add connection error handling with clear message in backend/main.py
-- [ ] T029 [US4] Test TC-004: Empty query returns error with `--query ""`
-- [ ] T030 [US4] Test TC-005: Unrelated query returns empty result message
+- [x] T025 [US4] Add empty result handling in search_knowledge_base in backend/main.py
+- [x] T026 [US4] Add "No matching content found" message for empty results in backend/main.py
+- [x] T027 [US4] Add collection-not-found error handling in backend/main.py
+- [x] T028 [US4] Add connection error handling with clear message in backend/main.py
+- [x] T029 [US4] Test TC-004: Empty query returns error with `--query ""`
+- [x] T030 [US4] Test TC-005: Unrelated query returns empty result message
 
 **Checkpoint**: User Story 4 complete - all error cases handled gracefully
 
@@ -125,11 +125,11 @@
 
 **Goal**: Support both text and JSON output formats per CLI contract
 
-- [ ] T031 Add --format argument (text/json) to search CLI in backend/main.py
-- [ ] T032 [P] Add format_search_result_text function in backend/main.py
-- [ ] T033 [P] Add format_search_result_json function in backend/main.py
-- [ ] T034 Integrate format selection into search command output in backend/main.py
-- [ ] T035 Test TC-006: JSON format outputs valid JSON with `--format json`
+- [x] T031 Add --format argument (text/json) to search CLI in backend/main.py
+- [x] T032 [P] Add format_search_result_text function in backend/main.py
+- [x] T033 [P] Add format_search_result_json function in backend/main.py
+- [x] T034 Integrate format selection into search command output in backend/main.py
+- [x] T035 Test TC-006: JSON format outputs valid JSON with `--format json`
 
 **Checkpoint**: Both output formats working correctly
 
@@ -139,12 +139,12 @@
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T036 Add --collection argument for custom collection name in backend/main.py
-- [ ] T037 [P] Update README.md in backend/ with search command documentation
-- [ ] T038 [P] Run Black formatter on backend/main.py
-- [ ] T039 Run quickstart.md validation - execute all example commands
-- [ ] T040 Test TC-007: Connection error handling (with invalid QDRANT_URL)
-- [ ] T041 Test TC-008: Missing API key handling (unset COHERE_API_KEY)
+- [x] T036 Add --collection argument for custom collection name in backend/main.py
+- [x] T037 [P] Update README.md in backend/ with search command documentation
+- [x] T038 [P] Run Black formatter on backend/main.py
+- [x] T039 Run quickstart.md validation - execute all example commands
+- [x] T040 Test TC-007: Connection error handling (with invalid QDRANT_URL)
+- [x] T041 Test TC-008: Missing API key handling (unset COHERE_API_KEY)
 
 ---
 

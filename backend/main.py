@@ -897,8 +897,10 @@ def store_vectors(
     try:
         info = client.get_collection(collection_name)
         # Handle different Qdrant client versions
-        vectors_count = getattr(info, 'vectors_count', None) or getattr(info, 'points_count', len(points))
-        points_count = getattr(info, 'points_count', len(points))
+        vectors_count = getattr(info, "vectors_count", None) or getattr(
+            info, "points_count", len(points)
+        )
+        points_count = getattr(info, "points_count", len(points))
     except Exception as e:
         logger.warning(f"Could not get collection info: {e}")
         vectors_count = len(points)
@@ -983,7 +985,9 @@ def verify_pipeline(collection_name: str, query: str) -> int:
     try:
         info = qdrant_client.get_collection(collection_name)
         # Handle different Qdrant client versions
-        vectors_count = getattr(info, 'vectors_count', None) or getattr(info, 'points_count', 0)
+        vectors_count = getattr(info, "vectors_count", None) or getattr(
+            info, "points_count", 0
+        )
     except Exception as e:
         print(f"Error getting collection info: {e}")
         return 2
@@ -1040,6 +1044,7 @@ def verify_pipeline(collection_name: str, query: str) -> int:
 @dataclass
 class RetrievedChunk:
     """A chunk retrieved from Qdrant with its metadata and score."""
+
     text: str
     score: float
     source_url: str
@@ -1053,6 +1058,7 @@ class RetrievedChunk:
 @dataclass
 class RetrievalResult:
     """Collection of retrieved chunks."""
+
     query: str
     chunks: list[RetrievedChunk] = field(default_factory=list)
     collection: str = "textbook_chunks"
@@ -1065,6 +1071,7 @@ class RetrievalResult:
 @dataclass
 class AssembledContext:
     """Formatted context for downstream use."""
+
     formatted_text: str
     chunk_count: int
     total_chars: int
@@ -1096,9 +1103,7 @@ def validate_k(k: int) -> int:
 
 
 def search_knowledge_base(
-    query: str,
-    k: int = 5,
-    collection_name: str = DEFAULT_COLLECTION
+    query: str, k: int = 5, collection_name: str = DEFAULT_COLLECTION
 ) -> tuple[Optional[RetrievalResult], Optional[str]]:
     """Search the knowledge base and return structured results."""
     # Validate inputs
@@ -1122,7 +1127,7 @@ def search_knowledge_base(
     # Check collection exists
     try:
         info = qdrant_client.get_collection(collection_name)
-        points_count = getattr(info, 'points_count', 0)
+        points_count = getattr(info, "points_count", 0)
         if points_count == 0:
             return RetrievalResult(query=query, collection=collection_name), None
     except Exception as e:
@@ -1159,16 +1164,18 @@ def search_knowledge_base(
     chunks = []
     for r in results:
         payload = r.payload
-        chunks.append(RetrievedChunk(
-            text=payload.get("text", ""),
-            score=r.score,
-            source_url=payload.get("source_url", ""),
-            chunk_index=payload.get("chunk_index", 0),
-            chunk_id=payload.get("chunk_id", ""),
-            chapter=payload.get("chapter", ""),
-            section=payload.get("section", ""),
-            title=payload.get("title", ""),
-        ))
+        chunks.append(
+            RetrievedChunk(
+                text=payload.get("text", ""),
+                score=r.score,
+                source_url=payload.get("source_url", ""),
+                chunk_index=payload.get("chunk_index", 0),
+                chunk_id=payload.get("chunk_id", ""),
+                chapter=payload.get("chapter", ""),
+                section=payload.get("section", ""),
+                title=payload.get("title", ""),
+            )
+        )
 
     return RetrievalResult(query=query, chunks=chunks, collection=collection_name), None
 
@@ -1213,18 +1220,20 @@ def sanitize_text_for_console(text: str) -> str:
     """Remove or replace characters that can't be displayed in Windows console."""
     # Remove zero-width spaces and other problematic Unicode characters
     replacements = {
-        '\u200b': '',  # zero-width space
-        '\u200c': '',  # zero-width non-joiner
-        '\u200d': '',  # zero-width joiner
-        '\ufeff': '',  # byte order mark
+        "\u200b": "",  # zero-width space
+        "\u200c": "",  # zero-width non-joiner
+        "\u200d": "",  # zero-width joiner
+        "\ufeff": "",  # byte order mark
     }
     for char, replacement in replacements.items():
         text = text.replace(char, replacement)
     # Encode to ASCII with replacement for any remaining non-ASCII chars
-    return text.encode('ascii', 'replace').decode('ascii')
+    return text.encode("ascii", "replace").decode("ascii")
 
 
-def format_search_result_text(result: RetrievalResult, context: AssembledContext) -> str:
+def format_search_result_text(
+    result: RetrievalResult, context: AssembledContext
+) -> str:
     """Format search result as text output."""
     output = []
     output.append("=" * 50)
@@ -1259,14 +1268,18 @@ def format_search_result_text(result: RetrievalResult, context: AssembledContext
 
     output.append("")
     output.append("=" * 50)
-    output.append(f"Context assembled: {context.chunk_count} chunks, {context.total_chars} characters")
+    output.append(
+        f"Context assembled: {context.chunk_count} chunks, {context.total_chars} characters"
+    )
     output.append(f"Sources: {len(context.sources)} unique pages")
     output.append("=" * 50)
 
     return "\n".join(output)
 
 
-def format_search_result_json(result: RetrievalResult, context: AssembledContext, error: Optional[str] = None) -> str:
+def format_search_result_json(
+    result: RetrievalResult, context: AssembledContext, error: Optional[str] = None
+) -> str:
     """Format search result as JSON output."""
     if error:
         data = {
@@ -1286,17 +1299,19 @@ def format_search_result_json(result: RetrievalResult, context: AssembledContext
     else:
         chunks_data = []
         for i, chunk in enumerate(result.chunks, 1):
-            chunks_data.append({
-                "rank": i,
-                "score": chunk.score,
-                "source_url": chunk.source_url,
-                "chapter": chunk.chapter,
-                "section": chunk.section,
-                "title": chunk.title,
-                "chunk_index": chunk.chunk_index,
-                "chunk_id": chunk.chunk_id,
-                "text": chunk.text,
-            })
+            chunks_data.append(
+                {
+                    "rank": i,
+                    "score": chunk.score,
+                    "source_url": chunk.source_url,
+                    "chapter": chunk.chapter,
+                    "section": chunk.section,
+                    "title": chunk.title,
+                    "chunk_index": chunk.chunk_index,
+                    "chunk_id": chunk.chunk_id,
+                    "text": chunk.text,
+                }
+            )
 
         data = {
             "status": "success",
@@ -1320,14 +1335,14 @@ def safe_print(text: str) -> None:
         print(text)
     except UnicodeEncodeError:
         # Fallback: encode with errors='replace' for Windows console
-        print(text.encode('ascii', 'replace').decode('ascii'))
+        print(text.encode("ascii", "replace").decode("ascii"))
 
 
 def run_search(
     query: str,
     k: int = 5,
     output_format: str = "text",
-    collection_name: str = DEFAULT_COLLECTION
+    collection_name: str = DEFAULT_COLLECTION,
 ) -> int:
     """Execute search command and return exit code."""
     result, error = search_knowledge_base(query, k, collection_name)
@@ -1520,8 +1535,11 @@ def create_parser() -> argparse.ArgumentParser:
         "--k", type=int, default=5, help="Number of results (3-8, default: 5)"
     )
     search_parser.add_argument(
-        "--format", "-f", choices=["text", "json"], default="text",
-        help="Output format (default: text)"
+        "--format",
+        "-f",
+        choices=["text", "json"],
+        default="text",
+        help="Output format (default: text)",
     )
     search_parser.add_argument(
         "--collection", default=DEFAULT_COLLECTION, help="Qdrant collection name"
