@@ -7,6 +7,7 @@ This script provides a complete pipeline for:
 3. Generating Cohere embeddings
 4. Storing vectors in Qdrant Cloud
 5. Verifying the knowledge base with sample queries
+6. FastAPI backend for frontend integration (Part 4)
 """
 
 from __future__ import annotations
@@ -34,8 +35,37 @@ import tiktoken
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 
+# FastAPI imports (Part 4)
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
 # Load environment variables
 load_dotenv()
+
+# =============================================================================
+# FastAPI Application Setup (Part 4)
+# =============================================================================
+
+app = FastAPI(
+    title="Textbook RAG API",
+    description="Backend API for the Physical AI & Humanoid Robotics textbook RAG chatbot",
+    version="1.0.0",
+)
+
+# CORS middleware configuration for local development
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Import and register routes (deferred to avoid circular imports)
+# Routes are registered after all functions are defined
 
 # Configure logging
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
@@ -1991,6 +2021,15 @@ def main() -> int:
         )
 
     return 0
+
+
+# =============================================================================
+# FastAPI Router Registration (Part 4)
+# =============================================================================
+# Register routes after all functions are defined to avoid circular imports
+
+from routes import router
+app.include_router(router)
 
 
 if __name__ == "__main__":

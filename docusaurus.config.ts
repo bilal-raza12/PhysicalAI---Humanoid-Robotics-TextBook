@@ -7,6 +7,11 @@ const config: Config = {
   tagline: 'A Simulation-First Approach to Building Intelligent Humanoid Systems',
   favicon: 'img/logo.svg',
 
+  // Custom fields for backend integration
+  customFields: {
+    backendUrl: process.env.BACKEND_URL || 'http://localhost:8000',
+  },
+
   // Set the production url of your site here
   url: 'https://bilal-raza12.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served

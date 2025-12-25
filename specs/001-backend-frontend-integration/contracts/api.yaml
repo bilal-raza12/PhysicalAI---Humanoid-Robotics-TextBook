@@ -1,0 +1,466 @@
+openapi: 3.1.0
+info:
+  title: Textbook RAG API
+  description: Backend API for the Physical AI & Humanoid Robotics textbook RAG chatbot
+  version: 1.0.0
+  contact:
+    name: Backend-Frontend Integration
+    url: https://github.com/openai/chatkit-js
+
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+
+paths:
+  /api/chatkit/session:
+    post:
+      summary: Create ChatKit session
+      description: Generate a client secret token for ChatKit authentication
+      operationId: createChatKitSession
+      tags:
+        - Session
+      responses:
+        '200':
+          description: Session token created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/ask:
+    post:
+      summary: Ask a question
+      description: Send a question to the RAG agent and receive a grounded answer
+      operationId: askQuestion
+      tags:
+        - Query
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryRequest'
+      responses:
+        '200':
+          description: Question answered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/search:
+    post:
+      summary: Search knowledge base
+      description: Search the textbook knowledge base for relevant chunks
+      operationId: searchKnowledgeBase
+      tags:
+        - Retrieval
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: Search completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/respond:
+    post:
+      summary: Generate agent response
+      description: Alias for /api/ask - routes to the agent for grounded response
+      operationId: generateResponse
+      tags:
+        - Query
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryRequest'
+      responses:
+        '200':
+          description: Response generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/store:
+    post:
+      summary: Store embeddings
+      description: Ingest and store embeddings in the vector database
+      operationId: storeEmbeddings
+      tags:
+        - Pipeline
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreRequest'
+      responses:
+        '200':
+          description: Embeddings stored successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/embed:
+    post:
+      summary: Generate embeddings
+      description: Generate embeddings for text chunks
+      operationId: generateEmbeddings
+      tags:
+        - Pipeline
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmbedRequest'
+      responses:
+        '200':
+          description: Embeddings generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmbedResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    SessionResponse:
+      type: object
+      required:
+        - client_secret
+      properties:
+        client_secret:
+          type: string
+          description: Ephemeral token for ChatKit authentication
+          example: "ck_sess_abc123..."
+
+    QueryRequest:
+      type: object
+      required:
+        - question
+      properties:
+        question:
+          type: string
+          minLength: 1
+          maxLength: 1000
+          description: Natural language question about the textbook
+          example: "What is ROS 2?"
+
+    QueryResponse:
+      type: object
+      required:
+        - answer
+        - grounded
+        - refused
+        - metadata
+      properties:
+        answer:
+          type: string
+          description: Agent's grounded response
+        citations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Citation'
+          description: Source references for the answer
+        grounded:
+          type: boolean
+          description: Whether answer uses retrieved context
+        refused:
+          type: boolean
+          description: Whether agent refused to answer
+        metadata:
+          $ref: '#/components/schemas/ResponseMetadata'
+
+    Citation:
+      type: object
+      required:
+        - source_url
+        - score
+        - chunk_index
+      properties:
+        source_url:
+          type: string
+          format: uri
+          description: URL to textbook page
+        chapter:
+          type: string
+          description: Chapter name
+        section:
+          type: string
+          description: Section name
+        score:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          description: Relevance score
+        chunk_index:
+          type: integer
+          minimum: 0
+          description: Chunk position in source
+
+    ResponseMetadata:
+      type: object
+      properties:
+        retrieval_time_ms:
+          type: number
+          format: float
+          description: Time for retrieval in milliseconds
+        generation_time_ms:
+          type: number
+          format: float
+          description: Time for generation in milliseconds
+        total_time_ms:
+          type: number
+          format: float
+          description: Total processing time in milliseconds
+        tool_calls:
+          type: array
+          items:
+            type: string
+          description: Tools invoked during processing
+
+    SearchRequest:
+      type: object
+      required:
+        - query
+      properties:
+        query:
+          type: string
+          minLength: 1
+          maxLength: 1000
+          description: Search query
+        k:
+          type: integer
+          minimum: 3
+          maximum: 8
+          default: 5
+          description: Number of results to return
+
+    SearchResponse:
+      type: object
+      required:
+        - query
+        - collection
+        - count
+      properties:
+        query:
+          type: string
+          description: Original search query
+        collection:
+          type: string
+          description: Qdrant collection name
+        count:
+          type: integer
+          minimum: 0
+          description: Number of results found
+        chunks:
+          type: array
+          items:
+            $ref: '#/components/schemas/RetrievedChunk'
+
+    RetrievedChunk:
+      type: object
+      required:
+        - chunk_id
+        - source_url
+        - text
+        - score
+      properties:
+        chunk_id:
+          type: string
+          format: uuid
+          description: Unique chunk identifier
+        source_url:
+          type: string
+          format: uri
+          description: Source page URL
+        text:
+          type: string
+          description: Chunk content
+        score:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          description: Similarity score
+        chapter:
+          type: string
+          description: Chapter name
+        section:
+          type: string
+          description: Section name
+        chunk_index:
+          type: integer
+          minimum: 0
+          description: Position in source
+
+    StoreRequest:
+      type: object
+      required:
+        - chunks_file
+        - embeddings_file
+      properties:
+        chunks_file:
+          type: string
+          description: Path to chunks JSON file
+        embeddings_file:
+          type: string
+          description: Path to embeddings JSON file
+        collection:
+          type: string
+          default: "textbook_chunks"
+          description: Qdrant collection name
+        recreate:
+          type: boolean
+          default: false
+          description: Whether to recreate the collection
+
+    StoreResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [success, error]
+        stored_count:
+          type: integer
+          description: Number of vectors stored
+        collection:
+          type: string
+          description: Collection name used
+
+    EmbedRequest:
+      type: object
+      required:
+        - chunks_file
+      properties:
+        chunks_file:
+          type: string
+          description: Path to chunks JSON file
+        output_file:
+          type: string
+          default: "embeddings.json"
+          description: Output file for embeddings
+
+    EmbedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [success, error]
+        embedded_count:
+          type: integer
+          description: Number of chunks embedded
+        output_file:
+          type: string
+          description: Path to output file
+
+    ErrorResponse:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          description: Error code
+          enum:
+            - VALIDATION_ERROR
+            - EMPTY_QUERY
+            - QUERY_TOO_LONG
+            - AGENT_ERROR
+            - RETRIEVAL_ERROR
+            - INTERNAL_ERROR
+        message:
+          type: string
+          description: Human-readable error message
+        details:
+          type: object
+          additionalProperties: true
+          description: Additional error context
+
+tags:
+  - name: Session
+    description: ChatKit session management
+  - name: Query
+    description: Question answering endpoints
+  - name: Retrieval
+    description: Knowledge base search
+  - name: Pipeline
+    description: Embedding and storage operations
