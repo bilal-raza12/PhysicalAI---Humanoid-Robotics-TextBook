@@ -1033,6 +1033,328 @@ def verify_pipeline(collection_name: str, query: str) -> int:
 
 
 # =============================================================================
+# Retrieval Pipeline (Part 2) - Search Command
+# =============================================================================
+
+
+@dataclass
+class RetrievedChunk:
+    """A chunk retrieved from Qdrant with its metadata and score."""
+    text: str
+    score: float
+    source_url: str
+    chunk_index: int
+    chunk_id: str
+    chapter: str = ""
+    section: str = ""
+    title: str = ""
+
+
+@dataclass
+class RetrievalResult:
+    """Collection of retrieved chunks."""
+    query: str
+    chunks: list[RetrievedChunk] = field(default_factory=list)
+    collection: str = "textbook_chunks"
+
+    @property
+    def count(self) -> int:
+        return len(self.chunks)
+
+
+@dataclass
+class AssembledContext:
+    """Formatted context for downstream use."""
+    formatted_text: str
+    chunk_count: int
+    total_chars: int
+    sources: list[str] = field(default_factory=list)
+
+
+def validate_query(query: str) -> tuple[str, Optional[str]]:
+    """Validate query text. Returns (validated_query, error_message)."""
+    if not query or not query.strip():
+        return "", "Query cannot be empty"
+
+    query = query.strip()
+    if len(query) > 1000:
+        logger.warning(f"Query truncated from {len(query)} to 1000 characters")
+        query = query[:1000]
+
+    return query, None
+
+
+def validate_k(k: int) -> int:
+    """Validate and clamp K parameter to valid range 3-8."""
+    if k < 3:
+        logger.warning(f"K={k} is below minimum, clamping to 3")
+        return 3
+    if k > 8:
+        logger.warning(f"K={k} is above maximum, clamping to 8")
+        return 8
+    return k
+
+
+def search_knowledge_base(
+    query: str,
+    k: int = 5,
+    collection_name: str = DEFAULT_COLLECTION
+) -> tuple[Optional[RetrievalResult], Optional[str]]:
+    """Search the knowledge base and return structured results."""
+    # Validate inputs
+    query, error = validate_query(query)
+    if error:
+        return None, error
+
+    k = validate_k(k)
+
+    # Get clients
+    try:
+        cohere_client = get_cohere_client()
+    except ValueError as e:
+        return None, f"Cohere API error: {e}"
+
+    try:
+        qdrant_client = get_qdrant_client()
+    except ValueError as e:
+        return None, f"Qdrant connection error: {e}"
+
+    # Check collection exists
+    try:
+        info = qdrant_client.get_collection(collection_name)
+        points_count = getattr(info, 'points_count', 0)
+        if points_count == 0:
+            return RetrievalResult(query=query, collection=collection_name), None
+    except Exception as e:
+        return None, f"Collection '{collection_name}' not found: {e}"
+
+    # Generate query embedding
+    try:
+        query_vector = generate_query_embedding(cohere_client, query)
+    except Exception as e:
+        return None, f"Embedding generation failed: {e}"
+
+    # Search Qdrant
+    try:
+        # Try newer API first (qdrant-client >= 1.7)
+        try:
+            results = qdrant_client.query_points(
+                collection_name=collection_name,
+                query=query_vector,
+                limit=k,
+                with_payload=True,
+            ).points
+        except AttributeError:
+            # Fall back to older API
+            results = qdrant_client.search(
+                collection_name=collection_name,
+                query_vector=query_vector,
+                limit=k,
+                with_payload=True,
+            )
+    except Exception as e:
+        return None, f"Search failed: {e}"
+
+    # Convert to RetrievedChunk objects
+    chunks = []
+    for r in results:
+        payload = r.payload
+        chunks.append(RetrievedChunk(
+            text=payload.get("text", ""),
+            score=r.score,
+            source_url=payload.get("source_url", ""),
+            chunk_index=payload.get("chunk_index", 0),
+            chunk_id=payload.get("chunk_id", ""),
+            chapter=payload.get("chapter", ""),
+            section=payload.get("section", ""),
+            title=payload.get("title", ""),
+        ))
+
+    return RetrievalResult(query=query, chunks=chunks, collection=collection_name), None
+
+
+def assemble_context(result: RetrievalResult) -> AssembledContext:
+    """Assemble retrieved chunks into formatted context."""
+    if result.count == 0:
+        return AssembledContext(
+            formatted_text="No matching content found in the knowledge base.",
+            chunk_count=0,
+            total_chars=0,
+            sources=[],
+        )
+
+    blocks = []
+    sources = set()
+
+    for i, chunk in enumerate(result.chunks, 1):
+        header = f"[{i}] Score: {chunk.score:.3f}"
+        header += f"\nSource: {chunk.source_url}"
+        if chunk.chapter:
+            header += f"\nChapter: {chunk.chapter}"
+        if chunk.section:
+            header += f" | Section: {chunk.section}"
+
+        block = f"{header}\n---\n{chunk.text}"
+        blocks.append(block)
+        sources.add(chunk.source_url)
+
+    formatted_text = "\n\n" + "-" * 50 + "\n\n".join(blocks)
+    total_chars = sum(len(c.text) for c in result.chunks)
+
+    return AssembledContext(
+        formatted_text=formatted_text,
+        chunk_count=result.count,
+        total_chars=total_chars,
+        sources=list(sources),
+    )
+
+
+def sanitize_text_for_console(text: str) -> str:
+    """Remove or replace characters that can't be displayed in Windows console."""
+    # Remove zero-width spaces and other problematic Unicode characters
+    replacements = {
+        '\u200b': '',  # zero-width space
+        '\u200c': '',  # zero-width non-joiner
+        '\u200d': '',  # zero-width joiner
+        '\ufeff': '',  # byte order mark
+    }
+    for char, replacement in replacements.items():
+        text = text.replace(char, replacement)
+    # Encode to ASCII with replacement for any remaining non-ASCII chars
+    return text.encode('ascii', 'replace').decode('ascii')
+
+
+def format_search_result_text(result: RetrievalResult, context: AssembledContext) -> str:
+    """Format search result as text output."""
+    output = []
+    output.append("=" * 50)
+    output.append("Search Results")
+    output.append("=" * 50)
+    output.append(f'Query: "{result.query}"')
+    output.append(f"Collection: {result.collection}")
+    output.append(f"Results: {result.count}")
+    output.append("")
+    output.append("=" * 50)
+
+    if result.count == 0:
+        output.append("")
+        output.append("No matching content found in the knowledge base.")
+        output.append("=" * 50)
+        return "\n".join(output)
+
+    for i, chunk in enumerate(result.chunks, 1):
+        output.append("")
+        output.append(f"[{i}] Score: {chunk.score:.3f}")
+        output.append(f"Source: {chunk.source_url}")
+        if chunk.chapter:
+            output.append(f"Chapter: {chunk.chapter}")
+        if chunk.section:
+            output.append(f"Section: {chunk.section}")
+        output.append("---")
+        # Show first 200 chars of text (sanitized for console)
+        text_preview = chunk.text[:200] + "..." if len(chunk.text) > 200 else chunk.text
+        output.append(sanitize_text_for_console(text_preview))
+        output.append("")
+        output.append("-" * 50)
+
+    output.append("")
+    output.append("=" * 50)
+    output.append(f"Context assembled: {context.chunk_count} chunks, {context.total_chars} characters")
+    output.append(f"Sources: {len(context.sources)} unique pages")
+    output.append("=" * 50)
+
+    return "\n".join(output)
+
+
+def format_search_result_json(result: RetrievalResult, context: AssembledContext, error: Optional[str] = None) -> str:
+    """Format search result as JSON output."""
+    if error:
+        data = {
+            "status": "error",
+            "code": "SEARCH_ERROR",
+            "message": error,
+        }
+    elif result.count == 0:
+        data = {
+            "status": "success",
+            "query": result.query,
+            "collection": result.collection,
+            "count": 0,
+            "chunks": [],
+            "message": "No matching content found in the knowledge base.",
+        }
+    else:
+        chunks_data = []
+        for i, chunk in enumerate(result.chunks, 1):
+            chunks_data.append({
+                "rank": i,
+                "score": chunk.score,
+                "source_url": chunk.source_url,
+                "chapter": chunk.chapter,
+                "section": chunk.section,
+                "title": chunk.title,
+                "chunk_index": chunk.chunk_index,
+                "chunk_id": chunk.chunk_id,
+                "text": chunk.text,
+            })
+
+        data = {
+            "status": "success",
+            "query": result.query,
+            "collection": result.collection,
+            "count": result.count,
+            "chunks": chunks_data,
+            "context": {
+                "chunk_count": context.chunk_count,
+                "total_chars": context.total_chars,
+                "sources": context.sources,
+            },
+        }
+
+    return json.dumps(data, indent=2, ensure_ascii=False)
+
+
+def safe_print(text: str) -> None:
+    """Print text with fallback encoding for Windows console."""
+    try:
+        print(text)
+    except UnicodeEncodeError:
+        # Fallback: encode with errors='replace' for Windows console
+        print(text.encode('ascii', 'replace').decode('ascii'))
+
+
+def run_search(
+    query: str,
+    k: int = 5,
+    output_format: str = "text",
+    collection_name: str = DEFAULT_COLLECTION
+) -> int:
+    """Execute search command and return exit code."""
+    result, error = search_knowledge_base(query, k, collection_name)
+
+    if error:
+        if output_format == "json":
+            safe_print(format_search_result_json(None, None, error))
+        else:
+            safe_print(f"\n{'=' * 50}")
+            safe_print("Error")
+            safe_print(f"{'=' * 50}")
+            safe_print(f"Message: {error}")
+            safe_print(f"\nExit code: 2")
+            safe_print(f"{'=' * 50}")
+        return 2
+
+    context = assemble_context(result)
+
+    if output_format == "json":
+        safe_print(format_search_result_json(result, context))
+    else:
+        safe_print(format_search_result_text(result, context))
+
+    return 0
+
+
+# =============================================================================
 # T053-T056: Full pipeline integration
 # =============================================================================
 
@@ -1187,6 +1509,24 @@ def create_parser() -> argparse.ArgumentParser:
         "--recreate", action="store_true", help="Delete and recreate collection"
     )
 
+    # search command (Part 2 - Retrieval Pipeline)
+    search_parser = subparsers.add_parser(
+        "search", help="Search the knowledge base with a natural language query"
+    )
+    search_parser.add_argument(
+        "--query", "-q", required=True, help="Natural language search query"
+    )
+    search_parser.add_argument(
+        "--k", type=int, default=5, help="Number of results (3-8, default: 5)"
+    )
+    search_parser.add_argument(
+        "--format", "-f", choices=["text", "json"], default="text",
+        help="Output format (default: text)"
+    )
+    search_parser.add_argument(
+        "--collection", default=DEFAULT_COLLECTION, help="Qdrant collection name"
+    )
+
     return parser
 
 
@@ -1220,6 +1560,9 @@ def main() -> int:
 
     elif args.command == "run":
         return run_full_pipeline(args.base_url, args.collection, args.recreate)
+
+    elif args.command == "search":
+        return run_search(args.query, args.k, args.format, args.collection)
 
     return 0
 
