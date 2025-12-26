@@ -9,7 +9,7 @@ const config: Config = {
 
   // Custom fields for backend integration
   customFields: {
-    backendUrl: process.env.BACKEND_URL || 'http://localhost:8000',
+    backendUrl: process.env.BACKEND_URL || 'https://physical-ai-backend-production-ee93.up.railway.app',
   },
 
   // Set the production url of your site here
