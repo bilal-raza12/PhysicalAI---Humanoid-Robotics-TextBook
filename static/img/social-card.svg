@@ -1,10 +1,134 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
-  <rect width="1200" height="630" fill="#0d47a1"/>
-  <circle cx="200" cy="315" r="120" fill="#1e88e5"/>
-  <circle cx="200" cy="275" r="40" fill="#fff"/>
-  <rect x="160" y="320" width="80" height="70" rx="10" fill="#fff"/>
-  <text x="380" y="280" font-family="Arial, sans-serif" font-size="56" font-weight="bold" fill="#fff">Physical AI &amp;</text>
-  <text x="380" y="360" font-family="Arial, sans-serif" font-size="56" font-weight="bold" fill="#fff">Humanoid Robotics</text>
-  <text x="380" y="430" font-family="Arial, sans-serif" font-size="28" fill="#90caf9">A Simulation-First Approach to Building</text>
-  <text x="380" y="470" font-family="Arial, sans-serif" font-size="28" fill="#90caf9">Intelligent Humanoid Systems</text>
+  <defs>
+    <!-- Main gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e1b4b"/>
+      <stop offset="50%" style="stop-color:#312e81"/>
+      <stop offset="100%" style="stop-color:#4c1d95"/>
+    </linearGradient>
+
+    <!-- Accent gradient -->
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1"/>
+      <stop offset="50%" style="stop-color:#8b5cf6"/>
+      <stop offset="100%" style="stop-color:#a855f7"/>
+    </linearGradient>
+
+    <!-- Core glow -->
+    <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#10b981"/>
+      <stop offset="100%" style="stop-color:#059669"/>
+    </radialGradient>
+
+    <!-- Glow filter -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGrad)"/>
+
+  <!-- Grid pattern -->
+  <g opacity="0.1">
+    <line x1="0" y1="100" x2="1200" y2="100" stroke="#818cf8" stroke-width="1"/>
+    <line x1="0" y1="200" x2="1200" y2="200" stroke="#818cf8" stroke-width="1"/>
+    <line x1="0" y1="300" x2="1200" y2="300" stroke="#818cf8" stroke-width="1"/>
+    <line x1="0" y1="400" x2="1200" y2="400" stroke="#818cf8" stroke-width="1"/>
+    <line x1="0" y1="500" x2="1200" y2="500" stroke="#818cf8" stroke-width="1"/>
+    <line x1="200" y1="0" x2="200" y2="630" stroke="#818cf8" stroke-width="1"/>
+    <line x1="400" y1="0" x2="400" y2="630" stroke="#818cf8" stroke-width="1"/>
+    <line x1="600" y1="0" x2="600" y2="630" stroke="#818cf8" stroke-width="1"/>
+    <line x1="800" y1="0" x2="800" y2="630" stroke="#818cf8" stroke-width="1"/>
+    <line x1="1000" y1="0" x2="1000" y2="630" stroke="#818cf8" stroke-width="1"/>
+  </g>
+
+  <!-- Decorative circles -->
+  <circle cx="100" cy="100" r="150" fill="none" stroke="#6366f1" stroke-width="1" opacity="0.2"/>
+  <circle cx="1100" cy="530" r="200" fill="none" stroke="#a855f7" stroke-width="1" opacity="0.2"/>
+
+  <!-- Robot Icon (centered-left) -->
+  <g transform="translate(150, 165)">
+    <!-- Background circle -->
+    <circle cx="150" cy="150" r="140" fill="url(#accentGrad)" filter="url(#glow)"/>
+    <circle cx="150" cy="150" r="125" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+
+    <!-- Robot Head -->
+    <rect x="95" y="55" width="110" height="90" rx="20" fill="#ffffff" opacity="0.95"/>
+
+    <!-- Visor -->
+    <rect x="105" y="70" width="90" height="35" rx="10" fill="url(#accentGrad)"/>
+    <rect x="110" y="75" width="80" height="10" rx="5" fill="rgba(255,255,255,0.3)"/>
+
+    <!-- Eyes -->
+    <circle cx="130" cy="92" r="10" fill="#ffffff"/>
+    <circle cx="170" cy="92" r="10" fill="#ffffff"/>
+    <circle cx="130" cy="92" r="5" fill="#10b981"/>
+    <circle cx="170" cy="92" r="5" fill="#10b981"/>
+
+    <!-- Antenna -->
+    <rect x="142" y="35" width="16" height="25" rx="8" fill="url(#accentGrad)"/>
+    <circle cx="150" cy="30" r="10" fill="#10b981" filter="url(#glow)"/>
+
+    <!-- Mouth -->
+    <rect x="120" y="115" width="60" height="15" rx="5" fill="url(#accentGrad)" opacity="0.7"/>
+
+    <!-- Neck -->
+    <rect x="130" y="145" width="40" height="20" rx="5" fill="#e0e7ff"/>
+
+    <!-- Torso -->
+    <path d="M85 165 L215 165 L205 240 L95 240 Z" fill="#ffffff" opacity="0.95"/>
+
+    <!-- Core -->
+    <circle cx="150" cy="195" r="25" fill="url(#coreGlow)" filter="url(#glow)"/>
+    <circle cx="150" cy="195" r="15" fill="#10b981"/>
+    <circle cx="150" cy="195" r="7" fill="#ffffff" opacity="0.8"/>
+
+    <!-- Arms -->
+    <rect x="50" y="165" width="25" height="60" rx="10" fill="#e0e7ff"/>
+    <rect x="225" y="165" width="25" height="60" rx="10" fill="#e0e7ff"/>
+    <circle cx="62" cy="170" r="12" fill="url(#accentGrad)"/>
+    <circle cx="238" cy="170" r="12" fill="url(#accentGrad)"/>
+  </g>
+
+  <!-- Title Text -->
+  <text x="520" y="240" font-family="Arial, sans-serif" font-size="72" font-weight="800" fill="#ffffff">
+    Physical AI &amp;
+  </text>
+  <text x="520" y="330" font-family="Arial, sans-serif" font-size="72" font-weight="800" fill="#a855f7">
+    Humanoid Robotics
+  </text>
+
+  <!-- Subtitle -->
+  <text x="520" y="400" font-family="Arial, sans-serif" font-size="28" fill="rgba(255,255,255,0.8)">
+    A Simulation-First Approach to Building
+  </text>
+  <text x="520" y="440" font-family="Arial, sans-serif" font-size="28" fill="rgba(255,255,255,0.8)">
+    Intelligent Humanoid Systems
+  </text>
+
+  <!-- Tags -->
+  <g transform="translate(520, 480)">
+    <rect x="0" y="0" width="80" height="32" rx="16" fill="url(#accentGrad)"/>
+    <text x="40" y="22" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#ffffff" text-anchor="middle">ROS 2</text>
+
+    <rect x="95" y="0" width="120" height="32" rx="16" fill="url(#accentGrad)"/>
+    <text x="155" y="22" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#ffffff" text-anchor="middle">Digital Twin</text>
+
+    <rect x="230" y="0" width="100" height="32" rx="16" fill="url(#accentGrad)"/>
+    <text x="280" y="22" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#ffffff" text-anchor="middle">Isaac Sim</text>
+
+    <rect x="345" y="0" width="60" height="32" rx="16" fill="url(#accentGrad)"/>
+    <text x="375" y="22" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#ffffff" text-anchor="middle">VLA</text>
+  </g>
+
+  <!-- Open Source Badge -->
+  <g transform="translate(520, 540)">
+    <rect x="0" y="0" width="180" height="36" rx="18" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+    <text x="90" y="24" font-family="Arial, sans-serif" font-size="14" fill="#ffffff" text-anchor="middle">Open Source Textbook</text>
+  </g>
 </svg>

@@ -132,7 +132,21 @@ body {
 }
 
 .navbar__logo {
-  filter: brightness(0) invert(1);
+  height: 40px !important;
+  width: 40px !important;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.navbar__logo:hover {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
+}
+
+.navbar__logo img {
+  height: 100% !important;
+  width: 100% !important;
 }
 
 /* Navbar items hover effect */
