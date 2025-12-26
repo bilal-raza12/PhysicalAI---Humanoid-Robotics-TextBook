@@ -1,9 +1,8 @@
 # Physical AI & Humanoid Robotics - Backend Dependencies
-# Python >= 3.13 required
 
 # Web Framework
 fastapi>=0.109.0
-uvicorn>=0.27.0
+uvicorn[standard]>=0.27.0
 pydantic>=2.5.0
 
 # AI/ML
@@ -18,8 +17,8 @@ qdrant-client>=1.16.2
 httpx>=0.28.1
 
 # HTML Parsing
-beautifulsoup4>=4.14.3
-lxml>=6.0.2
+beautifulsoup4>=4.12.0
+lxml>=5.0.0
 
 # Environment
-python-dotenv>=1.2.1
+python-dotenv>=1.0.0
