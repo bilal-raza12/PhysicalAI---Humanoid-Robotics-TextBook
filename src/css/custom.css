@@ -172,9 +172,9 @@ body {
   width: 80%;
 }
 
-/* Mobile navbar toggle (hamburger menu) */
+/* Mobile navbar toggle (hamburger menu) - HIDDEN on desktop */
 .navbar__toggle {
-  display: flex !important;
+  display: none !important;
   color: white !important;
   margin-right: 8px;
   background: rgba(255, 255, 255, 0.1) !important;
@@ -308,6 +308,7 @@ body {
     flex-wrap: nowrap !important;
   }
 
+  /* Show hamburger menu on mobile only */
   .navbar__toggle {
     display: flex !important;
     align-items: center;
@@ -328,7 +329,8 @@ body {
     text-overflow: ellipsis;
   }
 
-  .navbar__items {
+  /* Hide desktop nav links on mobile */
+  .navbar__items--left {
     display: none !important;
   }
 
@@ -338,15 +340,9 @@ body {
     gap: 8px;
   }
 
-  /* Hide desktop menu items on mobile */
-  .navbar__item.dropdown,
-  .navbar__link:not([href*="github"]) {
+  /* Hide Book link on mobile (it's in sidebar) */
+  .navbar__items--right .navbar__item:not([href*="github"]) {
     display: none !important;
-  }
-
-  /* Show only essential items */
-  .navbar__item[href*="github"] {
-    display: flex !important;
   }
 }
 
