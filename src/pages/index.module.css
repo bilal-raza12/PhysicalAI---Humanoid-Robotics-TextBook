@@ -1096,6 +1096,7 @@
    RESPONSIVE DESIGN
    ============================================================================= */
 
+/* Tablet breakpoint */
 @media (max-width: 996px) {
   .heroTitle {
     font-size: 3rem;
@@ -1119,32 +1120,72 @@
   .capstoneRobot {
     font-size: 6rem;
   }
+
+  /* Reduce gradient orb sizes on tablet */
+  .gradientOrb1 {
+    width: 400px;
+    height: 400px;
+    top: -150px;
+    left: -150px;
+  }
+
+  .gradientOrb2 {
+    width: 350px;
+    height: 350px;
+    right: -100px;
+  }
+
+  .gradientOrb3 {
+    width: 300px;
+    height: 300px;
+  }
 }
 
+/* Mobile breakpoint */
 @media (max-width: 600px) {
+  /* Prevent all horizontal overflow */
   .heroSection {
     overflow: hidden;
+    max-width: 100vw;
+  }
+
+  .heroContent {
+    padding: 1.5rem 1rem;
+    max-width: 100%;
   }
 
   .heroTitle {
-    font-size: 2.25rem;
+    font-size: 2rem;
+    line-height: 1.2;
   }
 
   .heroSubtitle {
-    font-size: 1.1rem;
+    font-size: 1rem;
+    padding: 0 0.5rem;
   }
 
   .stats {
-    gap: 1rem;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   .statNumber {
-    font-size: 2rem;
+    font-size: 1.75rem;
+  }
+
+  .statLabel {
+    font-size: 0.75rem;
+  }
+
+  .statDivider {
+    height: 30px;
   }
 
   .ctaButtons {
     flex-direction: column;
     align-items: center;
+    gap: 0.75rem;
   }
 
   .primaryButton,
@@ -1152,75 +1193,305 @@
     width: 100%;
     max-width: 280px;
     justify-content: center;
+    padding: 14px 24px;
+    font-size: 1rem;
   }
 
-  /* Hide complex robot visual on mobile - too wide */
+  /* Simplify hero visual on mobile */
   .heroVisual {
     width: 100%;
-    max-width: 320px;
-    height: 250px;
-    margin: 2rem auto 0;
-    overflow: hidden;
+    max-width: 280px;
+    height: 220px;
+    margin: 1.5rem auto 0;
+    overflow: visible;
+    position: relative;
   }
 
-  /* Hide tech labels on mobile - they cause overflow */
+  /* Hide decorative elements that cause layout issues */
   .techLabels {
-    display: none;
+    display: none !important;
   }
 
-  /* Hide code snippets on mobile */
   .codeSnippets {
-    display: none;
+    display: none !important;
   }
 
-  /* Scale down robot container */
-  .robotContainer {
-    transform: scale(0.7);
-  }
-
-  /* Hide orbit ring on mobile */
   .orbitRing {
-    display: none;
+    display: none !important;
+  }
+
+  .particles {
+    display: none !important;
+  }
+
+  /* Simplify gradient orbs on mobile */
+  .gradientOrb1 {
+    width: 200px;
+    height: 200px;
+    top: -50px;
+    left: -50px;
+    opacity: 0.5;
+  }
+
+  .gradientOrb2 {
+    width: 180px;
+    height: 180px;
+    right: -40px;
+    opacity: 0.5;
+  }
+
+  .gradientOrb3 {
+    width: 150px;
+    height: 150px;
+    bottom: -30px;
+    left: 20%;
+    opacity: 0.5;
+  }
+
+  /* Properly center and scale robot */
+  .robotContainer {
+    position: relative;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0.65);
+    transform-origin: center center;
+  }
+
+  .robotGlow {
+    width: 200px;
+    height: 200px;
   }
 
   .featuresGrid {
     grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .featureCard {
+    padding: 1.5rem 1rem;
   }
 
   .moduleCard {
     flex-direction: column;
     align-items: center;
     text-align: center;
+    padding: 1.25rem;
   }
 
   .moduleHeader {
     justify-content: center;
   }
 
-  .capstoneTitle {
+  .moduleIcon {
+    width: 60px;
+    height: 60px;
     font-size: 1.75rem;
+  }
+
+  .moduleTitle {
+    font-size: 1.1rem;
+  }
+
+  .moduleDescription {
+    font-size: 0.85rem;
+  }
+
+  .capstoneSection {
+    padding: 4rem 0;
+  }
+
+  .capstoneTitle {
+    font-size: 1.5rem;
+  }
+
+  .capstoneDescription {
+    font-size: 1rem;
+  }
+
+  .capstoneRobot {
+    font-size: 4rem;
+  }
+
+  .scrollIndicator {
+    bottom: 20px;
+    font-size: 0.8rem;
+  }
+
+  /* Section headers */
+  .sectionTitle {
+    font-size: 1.75rem;
+  }
+
+  .sectionSubtitle {
+    font-size: 1rem;
+    padding: 0 1rem;
+  }
+
+  .sectionHeader {
+    margin-bottom: 2.5rem;
+  }
+
+  .modulesSection,
+  .featuresSection {
+    padding: 4rem 0;
   }
 }
 
-/* Extra small mobile */
+/* Extra small mobile (iPhone SE, etc.) */
 @media (max-width: 400px) {
   .heroVisual {
-    width: 100%;
-    max-width: 280px;
-    height: 200px;
+    max-width: 240px;
+    height: 180px;
   }
 
   .robotContainer {
-    transform: scale(0.55);
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+
+  .robotGlow {
+    width: 160px;
+    height: 160px;
   }
 
   .heroTitle {
-    font-size: 1.85rem;
+    font-size: 1.75rem;
+  }
+
+  .heroSubtitle {
+    font-size: 0.9rem;
   }
 
   .badge {
-    font-size: 0.8rem;
-    padding: 6px 12px;
+    font-size: 0.75rem;
+    padding: 6px 10px;
+  }
+
+  .stats {
+    gap: 0.5rem;
+  }
+
+  .statNumber {
+    font-size: 1.5rem;
+  }
+
+  .statDivider {
+    height: 24px;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    padding: 12px 20px;
+    font-size: 0.9rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.5rem;
+  }
+
+  .featureIcon {
+    font-size: 2.5rem;
+  }
+
+  .featureTitle {
+    font-size: 1rem;
+  }
+
+  .featureDescription {
+    font-size: 0.85rem;
+  }
+}
+
+/* Reduce motion for users who prefer it + mobile performance */
+@media (prefers-reduced-motion: reduce) {
+  .gradientOrb1,
+  .gradientOrb2,
+  .gradientOrb3 {
+    animation: none !important;
+  }
+
+  .humanoidRobot {
+    animation: none !important;
+  }
+
+  .robotGlow {
+    animation: none !important;
+  }
+
+  .visorGlow {
+    animation: none !important;
+  }
+
+  .headAntenna::after {
+    animation: none !important;
+  }
+
+  .coreInner {
+    animation: none !important;
+  }
+
+  .coreRing {
+    animation: none !important;
+  }
+
+  .arm {
+    animation: none !important;
+  }
+
+  .orbitRing {
+    animation: none !important;
+  }
+
+  .particles span {
+    animation: none !important;
+  }
+
+  .codeSnippet,
+  .codeSnippet2 {
+    animation: none !important;
+  }
+
+  .badge,
+  .heroTitle,
+  .heroSubtitle,
+  .stats,
+  .ctaButtons,
+  .heroVisual,
+  .scrollIndicator {
+    animation: none !important;
+  }
+}
+
+/* Disable heavy animations on mobile for performance */
+@media (max-width: 600px) {
+  .gradientOrb1,
+  .gradientOrb2,
+  .gradientOrb3 {
+    animation: none !important;
+  }
+
+  .humanoidRobot {
+    animation: none !important;
+  }
+
+  .robotGlow {
+    animation: none !important;
+    opacity: 0.8;
+  }
+
+  .visorGlow {
+    animation: visorScan 3s ease-in-out infinite;
+  }
+
+  .coreRing {
+    animation: ringRotate 6s linear infinite;
+  }
+
+  .arm {
+    animation: none !important;
+  }
+
+  .headAntenna::after {
+    animation: antennaBlink 2s ease-in-out infinite;
   }
 }
 
